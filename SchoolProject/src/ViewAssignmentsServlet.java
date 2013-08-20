@@ -135,12 +135,41 @@ public class ViewAssignmentsServlet extends HttpServlet {
 		out.println("<table width=\"50%\" border=\"1\"> \n");
 		out.println("<tr> \n");
 		out.println("<td> Assignment Name </td> \n");
+		out.println("<td> Edit Assignment </td> \n");
 		out.println("<td> Grade Assignment </td> \n");
 		
 		out.println("</tr> \n");
 		for( int i = 0; i < assignmentIDs.size(); i++){
 			out.println("<tr> \n");
 			out.println("<td> " + assignmentNames.get(i) + " </td> \n");
+			
+			out.println("<td> \n");
+			
+			out.println("<form action=\"EditAssignmentServlet\" method=\"post\" > \n");
+			out.println("<input type=\"hidden\" name=\"TeacherID\" value=\"" + teacherID  + "\"> \n");
+			out.println("<input type=\"hidden\" name=\"ClassID\" value=\"" + classID  + "\"> \n");
+			out.println("<input type=\"hidden\" name=\"ClassName\" value=\"" + className  + "\"> \n");
+			out.println("<input type=\"hidden\" name=\"SubjectName\" value=\"" + subjectName  + "\"> \n");
+			
+			out.println("<input type=\"hidden\" name=\"AssignmentID\" value=\"" + assignmentIDs.get(i)  + "\"> \n");
+			out.println("<input type=\"hidden\" name=\"AssignmentName\" value=\"" + assignmentNames.get(i)  + "\"> \n");
+			out.println("<input type=\"hidden\" name=\"Question1\" value=\"" + question1s.get(i)  + "\"> \n");
+			out.println("<input type=\"hidden\" name=\"Question2\" value=\"" + question2s.get(i)  + "\"> \n");
+			out.println("<input type=\"hidden\" name=\"Question3\" value=\"" + question3s.get(i)  + "\"> \n");
+			out.println("<input type=\"hidden\" name=\"Question4\" value=\"" + question4s.get(i)  + "\"> \n");
+			out.println("<input type=\"hidden\" name=\"Question5\" value=\"" + question5s.get(i)  + "\"> \n");
+			
+			
+			
+			//out.println("<input type=\"hidden\" name=\"TeacherName\" value=\"" + enrolledTeacherNames.get(i)  + "\"> \n");
+			
+			out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
+			out.println("<input type=\"hidden\" name=\"Password\" value=\"" + request.getParameter("Password")  + "\"> \n");
+			
+			out.println("<br><input type=\"submit\" value=\"Edit Assignment!\"> \n");
+			out.println("</form> \n");
+			
+			out.println("</td> \n");
 			
 			out.println("<td> \n");
 			

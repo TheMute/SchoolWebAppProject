@@ -97,7 +97,7 @@ public class StudentHomeServlet extends HttpServlet {
 	        firstName = rs.getString("FirstName");
 	        lastName = rs.getString("LastName");
 			
-	        stmt = conn.prepareStatement(" SELECT * FROM CLASS ");
+	        stmt = conn.prepareStatement(" SELECT * FROM CLASS ORDER BY ClassName");
 	        rs = stmt.executeQuery();
 	        while( rs.next() ){
 	        	classIDs.add( rs.getInt("ClassID"));
@@ -174,7 +174,7 @@ public class StudentHomeServlet extends HttpServlet {
 		
 		response.setContentType("text/html");  
 		PrintWriter out = response.getWriter();
-		String title = "Login";
+		String title = "Student Home Page";
 		out.println( "<!DOCTYPE html> \n" +
 					 "<html> \n" + 
 					 "<head> \n" +
@@ -287,6 +287,9 @@ public class StudentHomeServlet extends HttpServlet {
 			out.println("</tr> \n");
 		}
 		out.println("</table> \n");
+		
+		out.println("<br><a href=\"http://localhost:8080/SchoolProject/\">Return to Login Page</a> \n");
+
 		
 		out.println( "</body> \n" );
 		out.println( "</html>\n" );

@@ -88,6 +88,7 @@ public class TeacherHomeServlet extends HttpServlet {
 		Vector<String> classSubjectNames = new Vector<String>();
 		
 		Vector<Integer> studentCount = new Vector<Integer>();
+		Vector<Integer> assignmentCount = new Vector<Integer>();
 	      
 		try{
 			// Register JDBC driver
@@ -118,7 +119,7 @@ public class TeacherHomeServlet extends HttpServlet {
 	        }
 			*/
 			stmt = conn.createStatement();
-			String sql = "SELECT * FROM SUBJECT";
+			String sql = "SELECT * FROM SUBJECT ORDER BY SubjectName";
 			ResultSet subjectsRS = stmt.executeQuery(sql);
 	
 	        while( subjectsRS.next() ){
@@ -161,6 +162,18 @@ public class TeacherHomeServlet extends HttpServlet {
 		        	break;
 		        }
 	        }
+	        
+	        ResultSet assignmentsRS;
+	        for( int i : classIDs ){
+	        	sql = "SELECT COUNT(A.AssignmentName) as Count FROM Assignment A JOIN CLASS B on (A.ClassID = B.ClassID) JOIN Teacher C on (B.TeacherID = C.TeacherID) WHERE C.TeacherID = " + teacherID + " AND B.ClassID = " + i;
+	        	assignmentsRS = stmt.executeQuery(sql);
+		        while( assignmentsRS.next() ){
+		        	assignmentCount.add( assignmentsRS.getInt("Count"));
+		        	break;
+		        }
+	        }
+	        
+	        
 	    }catch(SQLException se){
 	    	//Handle errors for JDBC
 	    	System.out.println(" SQLException occurred! ");
@@ -235,7 +248,10 @@ public class TeacherHomeServlet extends HttpServlet {
 		out.println("<td> Class Name </td> \n");
 		out.println("<td> Subject Name </td> \n");
 		out.println("<td> Number of Students </td> \n");
-		out.println("<td> Grade Assignments </td> \n");
+		out.println("<td> Number of Assignments </td> \n");
+		
+		
+		out.println("<td> Edit/Grade Assignments </td> \n");
 		
 		out.println("</tr> \n");
 		for( int i = 0; i < classIDs.size(); i++){
@@ -243,6 +259,7 @@ public class TeacherHomeServlet extends HttpServlet {
 			out.println("<td> " + classNames.get(i) + " </td> \n");
 			out.println("<td> " + classSubjectNames.get(i) + " </td> \n");
 			out.println("<td> " + studentCount.get(i) + " </td> \n");
+			out.println("<td> " + assignmentCount.get(i) + " </td> \n");
 			
 			out.println("<td> \n");
 			
@@ -297,6 +314,8 @@ public class TeacherHomeServlet extends HttpServlet {
 		out.println("<br><input type=\"submit\" value=\"Create the Assignment!\"> \n");
 
 		out.println("</form> \n");
+		
+		out.println("<br><a href=\"http://localhost:8080/SchoolProject/\">Return to Login Page</a> \n");
 		
 		out.println( "</body> \n" );
 		out.println( "</html>\n" );
