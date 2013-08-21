@@ -182,7 +182,7 @@ public class StudentHomeServlet extends HttpServlet {
 					 "<title>" + title + "</title> \n" +
 					 "</head> \n" +
 					 "<body> \n" );
-		
+
 		out.println("<h1>Student Home Page </h1>\n");
 		out.println("<h2>Welcome " + firstName + " " + lastName + "!</h2>\n");
 		
@@ -267,7 +267,7 @@ public class StudentHomeServlet extends HttpServlet {
 			
 			out.println("<td> \n");
 			
-			out.println("<form action=\"DropClassServlet\" method=\"post\" > \n");
+			out.println("<form action=\"DropClassServlet\" id=\"DropClass\" method=\"post\" > \n");
 
 
 			out.println("<input type=\"hidden\" name=\"StudentID\" value=\"" + studentID  + "\"> \n");
@@ -278,7 +278,7 @@ public class StudentHomeServlet extends HttpServlet {
 			out.println("<input type=\"hidden\" name=\"Email\" value=\"" + email  + "\"> \n");
 			out.println("<input type=\"hidden\" name=\"Password\" value=\"" + password  + "\"> \n");
 			
-			out.println("<br><input type=\"submit\" value=\"Drop this Class!\"> \n");
+			out.println("<br><input type=\"submit\" value=\"Drop this Class!\" onclick=\"return confirm('Are you sure you want to drop the class " + enrolledClassNames.get(i)  + "?')\"  > \n");
 			out.println("</form> \n");
 			
 			out.println("</td> \n");

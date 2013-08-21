@@ -120,7 +120,7 @@ public class ViewAssignmentsServlet extends HttpServlet {
 		
 	    response.setContentType("text/html");  
 		PrintWriter out = response.getWriter();
-		String title = "View Class' Assignments!";
+		String title = "View Assignments!";
 		out.println( "<!DOCTYPE html> \n" +
 					 "<html> \n" + 
 					 "<head> \n" +

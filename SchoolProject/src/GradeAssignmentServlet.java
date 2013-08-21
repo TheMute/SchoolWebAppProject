@@ -154,7 +154,7 @@ public class GradeAssignmentServlet extends HttpServlet {
 		
 	    response.setContentType("text/html");  
 		PrintWriter out = response.getWriter();
-		String title = "Grade Students' Assignments!";
+		String title = "Grade Assignment!";
 		out.println( "<!DOCTYPE html> \n" +
 					 "<html> \n" + 
 					 "<head> \n" +
@@ -164,10 +164,10 @@ public class GradeAssignmentServlet extends HttpServlet {
 					 "<body> \n" );
 		
 		
-		out.println( "<h4> Assignment " + assignmentName + " for student " + firstName + " " + lastName + " </h4> <br> \n"  );
+		out.println( "<h4>Grade the assignment \"" + assignmentName + "\" </h4> \n"  );
 		
 		
-		out.println("<br><font face=\"verdana\" size=\"2px\">Student Name: " + firstName + " " + lastName  +"</font> \n");
+		out.println("<font face=\"verdana\" size=\"2px\">Student Name: " + firstName + " " + lastName  +"</font> \n");
 		out.println("<br><font face=\"verdana\" size=\"2px\">Assignment Name: " + assignmentName  +"</font> \n");
 		
 		out.println("<form action=\"CreateGradedAssignment\" method=\"post\" > \n");
@@ -285,6 +285,8 @@ public class GradeAssignmentServlet extends HttpServlet {
 		out.println("</table> \n");
 		*/
 		
+		out.println("<input type=\"hidden\" name=\"AssignmentName\" value=\"" + assignmentName  + "\"> \n");
+
 		out.println("<input type=\"hidden\" name=\"CompletedAssignmentID\" value=\"" + completedAssignmentID  + "\"> \n");
 		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
 		out.println("<input type=\"hidden\" name=\"Password\" value=\"" + request.getParameter("Password")  + "\"> \n");

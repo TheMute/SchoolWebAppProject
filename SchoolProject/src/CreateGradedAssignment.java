@@ -158,7 +158,7 @@ public class CreateGradedAssignment extends HttpServlet {
 		
 	    response.setContentType("text/html");  
 		PrintWriter out = response.getWriter();
-		String title = "Create Graded Assignment!";
+		String title = "Graded Assignment Created!";
 		out.println( "<!DOCTYPE html> \n" +
 					 "<html> \n" + 
 					 "<head> \n" +
@@ -167,10 +167,10 @@ public class CreateGradedAssignment extends HttpServlet {
 					 "</head> \n" +
 					 "<body> \n" );
 		
-		out.println( "<h4> Graded assignment created! </h4> <br> \n"  );
+		out.println( "<h4> Created graded assignment for \"" + request.getParameter("AssignmentName") + "\"! </h4> \n"  );
 
 		
-		out.println("<br><form action=\"TeacherHomeServlet\" method=\"post\" > \n");
+		out.println("<form action=\"TeacherHomeServlet\" method=\"post\" > \n");
 		
 		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
 		out.println("<input type=\"hidden\" name=\"Password\" value=\"" + request.getParameter("Password")  + "\"> \n");

@@ -12,9 +12,15 @@
 </head>
 <body>
 
-<form action="RegisterServlet" method="post">
-      <input type="submit" value="Register">
-</form>
+<style type="text/css">
+  form {
+    display: inline;
+}
+  </style>
+
+<h1>Welcome To My School Web App Project</h1>
+
+Please enter your email and password to login!<br>
 
 <form action="LoginServlet" method="post" >
    <table>
@@ -40,11 +46,14 @@
 		<input type="submit" value="Login">
 </form>
 
+
+
+	<form action="RegisterServlet" method="post">
+		<input type="submit" value="Register">
+	</form>
+
 <br>
 
-<form action="HelloWorld" method="post">
-      <input type="submit" value="Hello World!"> 
-</form>
 
 <!--  
           <select name="Feedback" multiple="multiple">  

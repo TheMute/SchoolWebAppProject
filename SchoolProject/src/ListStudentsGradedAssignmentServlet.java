@@ -164,7 +164,7 @@ public class ListStudentsGradedAssignmentServlet extends HttpServlet {
 		
 		response.setContentType("text/html");  
 		PrintWriter out = response.getWriter();
-		String title = "Your Assignments!";
+		String title = "View Graded Assignments!";
 		out.println( "<!DOCTYPE html> \n" +
 					 "<html> \n" + 
 					 "<head> \n" +

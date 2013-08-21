@@ -111,7 +111,7 @@ public class EnrollClassServlet extends HttpServlet {
 	    
 	    response.setContentType("text/html");  
 		PrintWriter out = response.getWriter();
-		String title = "Class Created!";
+		String title = "Class Enrolled!";
 		out.println( "<!DOCTYPE html> \n" +
 					 "<html> \n" + 
 					 "<head> \n" +
@@ -121,7 +121,7 @@ public class EnrollClassServlet extends HttpServlet {
 					 "<body> \n" );
 		
 		
-		out.println( "Class " + className + " entrolled!" );
+		out.println( "Class " + className + " enrolled in!" );
 		out.println( "<br> \n" );
 		//out.println( "<a href=\"http://localhost:8080/SchoolProject/TeacherHomeServlet\">Return to Teacher Home Page</a> \n");
 		//out.println(" <A HREF=\"javascript:history.back()\">Go Back to Student Home Page</A> \n ");

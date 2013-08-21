@@ -153,7 +153,7 @@ public class ViewGradedAssignmentServlet extends HttpServlet {
 		
 	    response.setContentType("text/html");  
 		PrintWriter out = response.getWriter();
-		String title = "Grade Students' Assignments!";
+		String title = "Your Graded Assignment!";
 		out.println( "<!DOCTYPE html> \n" +
 					 "<html> \n" + 
 					 "<head> \n" +

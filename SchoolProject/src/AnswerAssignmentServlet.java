@@ -57,7 +57,7 @@ public class AnswerAssignmentServlet extends HttpServlet {
 		
 		response.setContentType("text/html");  
 		PrintWriter out = response.getWriter();
-		String title = "Complete Assignment!";
+		String title = "Answer Assignment!";
 		out.println( "<!DOCTYPE html> \n" +
 					 "<html> \n" + 
 					 "<head> \n" +
@@ -67,7 +67,7 @@ public class AnswerAssignmentServlet extends HttpServlet {
 					 "<body> \n" );
 		
 		
-		out.println( "Here are the questions for the assignment " + assignmentName + "<br> \n" );
+		out.println( "Here are the questions for the assignment \"" + assignmentName + "\"<br> \n" );
 		
 		
 		out.println("<form action=\"CreateCompletedAssignmentServlet\" method=\"post\" > \n");
@@ -92,6 +92,14 @@ public class AnswerAssignmentServlet extends HttpServlet {
 		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
 		out.println("<input type=\"hidden\" name=\"Password\" value=\"" + request.getParameter("Password")  + "\"> \n");
 		
+		out.println("</form> \n");
+		
+		out.println("<br><form action=\"StudentHomeServlet\" method=\"post\" > \n");
+		
+		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
+		out.println("<input type=\"hidden\" name=\"Password\" value=\"" + request.getParameter("Password")  + "\"> \n");
+		
+		out.println("<br><input type=\"submit\" value=\"Return to Student Home Page!\"> \n");
 		out.println("</form> \n");
 		
 		out.println( "</body> \n" );

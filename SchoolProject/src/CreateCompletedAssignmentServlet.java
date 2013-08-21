@@ -132,7 +132,7 @@ public class CreateCompletedAssignmentServlet extends HttpServlet {
 		
 	    response.setContentType("text/html");  
 		PrintWriter out = response.getWriter();
-		String title = "Class Created!";
+		String title = "Completed Assignment Created!";
 		out.println( "<!DOCTYPE html> \n" +
 					 "<html> \n" + 
 					 "<head> \n" +
@@ -141,7 +141,7 @@ public class CreateCompletedAssignmentServlet extends HttpServlet {
 					 "</head> \n" +
 					 "<body> \n" );
 	    
-		out.println( "Assignment " + assignmentName + " commpleted! <br> \n" );
+		out.println( "Assignment \"" + assignmentName + "\" commpleted! <br> \n" );
 
 		out.println("<form action=\"StudentHomeServlet\" method=\"post\" > \n");
 		

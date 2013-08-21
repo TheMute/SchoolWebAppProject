@@ -164,7 +164,7 @@ public class ViewCompleteAssignmentServlet extends HttpServlet {
 		
 		response.setContentType("text/html");  
 		PrintWriter out = response.getWriter();
-		String title = "Your Assignments!";
+		String title = "View Your Assignments!";
 		out.println( "<!DOCTYPE html> \n" +
 					 "<html> \n" + 
 					 "<head> \n" +
