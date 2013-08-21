@@ -107,7 +107,7 @@ public class CreateGradedAssignment extends HttpServlet {
 			}
 
 			if( graded ){
-				stmt = conn.prepareStatement( "UPDATE GradedAssignment SET CheckOff1=?, CheckOff2=?, CheckOff3=?, CheckOff4=?, CheckOff5=? WHERE CompletedAssignmentID=?" );
+				stmt = conn.prepareStatement( "UPDATE GradedAssignment SET CheckOff1=?, CheckOff2=?, CheckOff3=?, CheckOff4=?, CheckOff5=?, GradedDate = CURDATE() WHERE CompletedAssignmentID=?" );
 				stmt.setInt(1, checkOff1);
 				stmt.setInt(2, checkOff2);
 				stmt.setInt(3, checkOff3);
@@ -116,7 +116,7 @@ public class CreateGradedAssignment extends HttpServlet {
 				stmt.setInt(6, completedAssignmentID);
 			}
 			else{
-				stmt = conn.prepareStatement( "INSERT INTO GradedAssignment VALUES (NULL, ?, ?, ?, ?, ?, ? )" );
+				stmt = conn.prepareStatement( "INSERT INTO GradedAssignment VALUES (NULL, ?, ?, ?, ?, ?, ?, CURDATE() )" );
 				stmt.setInt(1, completedAssignmentID);
 				stmt.setInt(2, checkOff1);
 				stmt.setInt(3, checkOff2);

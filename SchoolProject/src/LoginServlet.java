@@ -53,10 +53,8 @@ public class LoginServlet extends HttpServlet {
         	student = false;
         
         String radio = request.getParameter("user");
-        System.out.println(radio);
         
-        String yolo = request.getParameter("yolo");
-        System.out.println("IS YOLO HERE: " + yolo);
+        
         
 		// JDBC driver name and database URL
 		final String JDBC_DRIVER="com.mysql.jdbc.Driver";  
@@ -93,8 +91,7 @@ public class LoginServlet extends HttpServlet {
 		        queryEmail = rs.getString("Email");
 		        queryPassword = rs.getString("Password");
 		        
-		        System.out.println(queryEmail);
-		        System.out.println(queryPassword);
+
 		        break;
 	        }
 
@@ -118,7 +115,6 @@ public class LoginServlet extends HttpServlet {
 	        e.printStackTrace();
 	    }finally{
 	        //finally block used to close resources
-	    	System.out.println(" In finally");
 			try{
 				if(stmt!=null)
 					stmt.close();

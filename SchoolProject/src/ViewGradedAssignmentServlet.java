@@ -3,6 +3,7 @@
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -80,6 +81,8 @@ public class ViewGradedAssignmentServlet extends HttpServlet {
 		int checkOff5 = 0;
 		int totalCheckOffs = 5;
 		
+		Date gradedDate = null;
+		
 		// JDBC driver name and database URL
 		final String JDBC_DRIVER="com.mysql.jdbc.Driver";  
 		final String DB_URL="jdbc:mysql://localhost:3306/SchoolProject";
@@ -122,6 +125,7 @@ public class ViewGradedAssignmentServlet extends HttpServlet {
 				checkOff3 = rs.getInt("CheckOff3");
 				checkOff4 = rs.getInt("CheckOff4");
 				checkOff5 = rs.getInt("CheckOff5");
+				gradedDate = rs.getDate("GradedDate");
 			}
 			
 			
@@ -165,9 +169,12 @@ public class ViewGradedAssignmentServlet extends HttpServlet {
 		
 		out.println( "<h4> Graded Assignment: " + assignmentName + " for " + firstName + " " + lastName + " </h4> <br> \n"  );
 		
-		
-		out.println("<br><font face=\"verdana\" size=\"2px\">Student Name: " + firstName + " " + lastName  +"</font> \n");
-		out.println("<br><font face=\"verdana\" size=\"2px\">Assignment Name: " + assignmentName  +"</font> \n");
+		out.println("<table> \n");
+		out.println("<tr> <td><font face=\"verdana\" size=\"2px\">Student Name:</font> </td>  <td><font face=\"verdana\" size=\"2px\">" + firstName + " " + lastName  +"</font></td></tr> \n");
+		out.println("<tr> <td><font face=\"verdana\" size=\"2px\">Assignment Name:</font> </td>  <td><font face=\"verdana\" size=\"2px\">" + assignmentName  +"</font></td></tr> \n");
+		out.println("<tr> <td><font face=\"verdana\" size=\"2px\">GradedDate:</font> </td>  <td><font face=\"verdana\" size=\"2px\">" + gradedDate  +"</font></td></tr> \n");
+		out.println("</table> \n");
+
 		
 		//out.println("<form action=\"CreateGradedAssignment\" method=\"post\" > \n");
 		
@@ -176,15 +183,18 @@ public class ViewGradedAssignmentServlet extends HttpServlet {
 		out.println("<td> <font face=\"verdana\" size=\"2px\">Questions </font> </td> \n");
 		out.println("<td> <font face=\"verdana\" size=\"2px\">Answers </font> </td> \n");
 		out.println("<td> <font face=\"verdana\" size=\"2px\">Correct? </font> </td> \n");
+		out.println("<td bgcolor=\"white\" width=5%></td> \n");
 		out.println("</tr> \n");	
 		out.println("<tr> \n");
 		out.println("<td> <font face=\"verdana\" size=\"2px\">" + question1 + "</font> </td> \n");
 		out.println("<td> <font face=\"verdana\" size=\"2px\">" + answer1 + "</font> </td> \n");
 		if( checkOff1 == 1 ){
 			out.println("<td> <font face=\"verdana\" size=\"2px\">Yes </font> </td> \n");
+			out.println("<td bgcolor=\"green\" width=5%></td> \n");
 		}
 		else{
 			out.println("<td> <font face=\"verdana\" size=\"2px\">No </font> </td> \n");
+			out.println("<td bgcolor=\"red\" width=5%></td> \n");
 		}
 		out.println("</tr> \n");
 		out.println("<tr> \n");
@@ -192,9 +202,11 @@ public class ViewGradedAssignmentServlet extends HttpServlet {
 		out.println("<td> <font face=\"verdana\" size=\"2px\">" + answer2 + "</font> </td> \n");
 		if( checkOff2 == 1 ){
 			out.println("<td> <font face=\"verdana\" size=\"2px\">Yes </font> </td> \n");
+			out.println("<td bgcolor=\"green\" width=5%></td> \n");
 		}
 		else{
 			out.println("<td> <font face=\"verdana\" size=\"2px\">No </font> </td> \n");
+			out.println("<td bgcolor=\"red\" width=5%></td> \n");
 		}		
 		out.println("</tr> \n");
 		out.println("<tr> \n");
@@ -202,9 +214,11 @@ public class ViewGradedAssignmentServlet extends HttpServlet {
 		out.println("<td> <font face=\"verdana\" size=\"2px\">" + answer3 + "</font> </td> \n");
 		if( checkOff3 == 1 ){
 			out.println("<td> <font face=\"verdana\" size=\"2px\">Yes </font> </td> \n");
+			out.println("<td bgcolor=\"green\" width=5%></td> \n");
 		}
 		else{
 			out.println("<td> <font face=\"verdana\" size=\"2px\">No </font> </td> \n");
+			out.println("<td bgcolor=\"red\" width=5%></td> \n");
 		}		
 		out.println("</tr> \n");
 		out.println("<tr> \n");
@@ -212,9 +226,11 @@ public class ViewGradedAssignmentServlet extends HttpServlet {
 		out.println("<td> <font face=\"verdana\" size=\"2px\">" + answer4 + "</font> </td> \n");
 		if( checkOff4 == 1 ){
 			out.println("<td> <font face=\"verdana\" size=\"2px\">Yes </font> </td> \n");
+			out.println("<td bgcolor=\"green\" width=5%></td> \n");
 		}
 		else{
 			out.println("<td> <font face=\"verdana\" size=\"2px\">No </font> </td> \n");
+			out.println("<td bgcolor=\"red\" width=5%></td> \n");
 		}	
 		out.println("</tr> \n");
 		out.println("<tr> \n");
@@ -222,9 +238,11 @@ public class ViewGradedAssignmentServlet extends HttpServlet {
 		out.println("<td> <font face=\"verdana\" size=\"2px\">" + answer5 + "</font> </td> \n");
 		if( checkOff5 == 1 ){
 			out.println("<td> <font face=\"verdana\" size=\"2px\">Yes </font> </td> \n");
+			out.println("<td bgcolor=\"green\" width=5%></td> \n");
 		}
 		else{
 			out.println("<td> <font face=\"verdana\" size=\"2px\">No </font> </td> \n");
+			out.println("<td bgcolor=\"red\" width=5%></td> \n");
 		}	
 		out.println("</tr> \n");
 		

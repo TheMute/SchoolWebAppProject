@@ -3,6 +3,7 @@
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -66,6 +67,7 @@ public class ViewCompleteAssignmentServlet extends HttpServlet {
 	    Vector<String> question3s = new Vector<String>();
 	    Vector<String> question4s = new Vector<String>();
 	    Vector<String> question5s = new Vector<String>();
+	    Vector<Date> dueDates = new Vector<Date>();
 	    
 	    int assignmentCount = 0;
 
@@ -98,6 +100,7 @@ public class ViewCompleteAssignmentServlet extends HttpServlet {
 	        	 question3s.add(  rs.getString("Question3"));
 	        	 question4s.add(  rs.getString("Question4"));
 	        	 question5s.add(  rs.getString("Question5"));
+	        	 dueDates.add(rs.getDate("DueDate"));
 	        	 
 	         }
 	         
@@ -179,11 +182,14 @@ public class ViewCompleteAssignmentServlet extends HttpServlet {
 		out.println("<br><table width=\"50%\" border=\"1\"> \n");
 		out.println("<tr> \n");
 		out.println("<td> Assignment Name </td> \n");
+		out.println("<td> Due Date </td> \n");
+		
 		out.println("<td> Complete Your Assignments </td> \n");
 		out.println("</tr> \n");
 		for( int i = 0; i < assignmentCount; i++){
 			out.println("<tr> \n");
 			out.println("<td> " + assignmentNames.get(i) + " </td> \n");
+			out.println("<td> " + dueDates.get(i) + " </td> \n");
 			
 			out.println("<td> \n");
 			

@@ -184,7 +184,6 @@ public class TeacherHomeServlet extends HttpServlet {
 	        e.printStackTrace();
 	    }finally{
 	        //finally block used to close resources
-	    	System.out.println(" In finally");
 			try{
 				if(stmt!=null)
 					stmt.close();

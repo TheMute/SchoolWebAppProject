@@ -3,6 +3,7 @@
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -58,6 +59,8 @@ public class ViewAssignmentsServlet extends HttpServlet {
 		Vector<String> question4s = new Vector<String>();
 		Vector<String> question5s = new Vector<String>();
 		
+		Vector<Date> dueDates = new Vector<Date>();
+		
 		
 		// JDBC driver name and database URL
 		final String JDBC_DRIVER="com.mysql.jdbc.Driver";  
@@ -89,6 +92,7 @@ public class ViewAssignmentsServlet extends HttpServlet {
 				question3s.add( rs.getString("Question3"));
 				question4s.add( rs.getString("Question4"));
 				question5s.add( rs.getString("Question5"));
+				dueDates.add( rs.getDate("DueDate"));
 				
 				
 			}
@@ -135,6 +139,8 @@ public class ViewAssignmentsServlet extends HttpServlet {
 		out.println("<table width=\"50%\" border=\"1\"> \n");
 		out.println("<tr> \n");
 		out.println("<td> Assignment Name </td> \n");
+		out.println("<td> Due Date </td> \n");
+		
 		out.println("<td> Edit Assignment </td> \n");
 		out.println("<td> Grade Assignment </td> \n");
 		
@@ -142,6 +148,7 @@ public class ViewAssignmentsServlet extends HttpServlet {
 		for( int i = 0; i < assignmentIDs.size(); i++){
 			out.println("<tr> \n");
 			out.println("<td> " + assignmentNames.get(i) + " </td> \n");
+			out.println("<td> " + dueDates.get(i) + " </td> \n");
 			
 			out.println("<td> \n");
 			
@@ -153,6 +160,8 @@ public class ViewAssignmentsServlet extends HttpServlet {
 			
 			out.println("<input type=\"hidden\" name=\"AssignmentID\" value=\"" + assignmentIDs.get(i)  + "\"> \n");
 			out.println("<input type=\"hidden\" name=\"AssignmentName\" value=\"" + assignmentNames.get(i)  + "\"> \n");
+			out.println("<input type=\"hidden\" name=\"DueDate\" value=\"" + dueDates.get(i)  + "\"> \n");
+			
 			out.println("<input type=\"hidden\" name=\"Question1\" value=\"" + question1s.get(i)  + "\"> \n");
 			out.println("<input type=\"hidden\" name=\"Question2\" value=\"" + question2s.get(i)  + "\"> \n");
 			out.println("<input type=\"hidden\" name=\"Question3\" value=\"" + question3s.get(i)  + "\"> \n");

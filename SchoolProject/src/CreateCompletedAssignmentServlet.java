@@ -73,7 +73,7 @@ public class CreateCompletedAssignmentServlet extends HttpServlet {
 	         conn = DriverManager.getConnection(DB_URL,USER,PASS);
 
 	         if( completed.equals("0")){
-			     stmt = conn.prepareStatement( "INSERT INTO CompletedAssignment VALUES(NULL, ?, ?, ?, ?, ?, ?, ? )" );
+			     stmt = conn.prepareStatement( "INSERT INTO CompletedAssignment VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, CURDATE() )" );
 		         stmt.setInt(1, studentID);
 		         stmt.setInt(2, assignmentID);
 		         stmt.setString(3,  answer1 );
@@ -84,7 +84,7 @@ public class CreateCompletedAssignmentServlet extends HttpServlet {
 		         stmt.executeUpdate();
 	         }
 	         else{
-			     stmt = conn.prepareStatement( "UPDATE CompletedAssignment SET Answer1 = ?, Answer2 = ?, Answer3 = ?, Answer4 = ?, Answer5 = ? WHERE studentID = ? AND assignmentID = ?" );
+			     stmt = conn.prepareStatement( "UPDATE CompletedAssignment SET Answer1 = ?, Answer2 = ?, Answer3 = ?, Answer4 = ?, Answer5 = ?, DueDate = CURDATE() WHERE studentID = ? AND assignmentID = ?" );
 
 		         stmt.setString(1,  answer1 );
 		         stmt.setString(2,  answer2 );
