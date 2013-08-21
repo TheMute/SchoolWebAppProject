@@ -214,8 +214,21 @@ public class TeacherHomeServlet extends HttpServlet {
 		
 		out.println("<h1>Teacher Home Page </h1>\n");
 		out.println("<h2>Welcome " + firstName + " " + lastName + "!</h2>\n");
+		
+		out.println("<b>Create a Subject </b>\n");
+		out.println("<br>Type a name to create a subject\n");
+		out.println("<form action=\"CreateSubjectServlet\" method=\"post\" > \n");
 
-		out.println("<b>Create a Class </b>\n");
+		out.println("<table><tr><td><font face=\"verdana\" size=\"2px\">Subject Name:</font></td> \n");
+		out.println("<td><input type=\"text\" name=\"SubjectName\" onkeyup=\"this.value = this.value.toUpperCase();\"   ></td></tr></table> \n");
+		
+		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + email  + "\"> \n");
+		out.println("<input type=\"hidden\" name=\"Paswword\" value=\"" + password  + "\"> \n");
+		
+		out.println("<input type=\"submit\" value=\"Create the Subject!\"> \n");
+		out.println("</form> \n");
+
+		out.println("<br><b>Create a Class </b>\n");
 		out.println("<br>Type a name and select a subject from the dropdown to create a class\n");
 		
 		out.println("<form action=\"CreateClassServlet\" method=\"post\" > \n");
@@ -224,22 +237,28 @@ public class TeacherHomeServlet extends HttpServlet {
 		out.println("<td><font face=\"verdana\" size=\"2px\">Class Name:</font></td> \n");
 		out.println("<td><input type=\"text\" name=\"ClassName\"></td> \n");
 		out.println("</tr> \n");
-		out.println("</table> \n");
+		
+		out.println("<tr> \n");
+
 		out.println("<td><font face=\"verdana\" size=\"2px\">Subject Name:</font></td> \n");
-		out.println("<select name=\"SubjectsDropdown\"> \n");
+		out.println("<td><select name=\"SubjectsDropdown\"> \n");
 		
 		int subjectID = 1;
 		for( String s : subjectNames ){
 			out.println("<option value=\"" + subjectID + "\">" + s + "</option> \n");
 			subjectID++;
 		}
-		out.println("</select> \n");
+		out.println("</select></td> \n");
 		out.println("<input type=\"hidden\" name=\"TeacherID\" value=\"" + teacherID  + "\"> \n");
 		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + email  + "\"> \n");
 		out.println("<input type=\"hidden\" name=\"Paswword\" value=\"" + password  + "\"> \n");
-		out.println("<input type=\"hidden\" name=\"user\" value=\"" + user  + "\"> \n");
 		
-		out.println("<br><input type=\"submit\" value=\"Create the Class!\"> \n");
+		out.println("</tr> \n");
+
+		
+		out.println("</table> \n");
+
+		out.println("<input type=\"submit\" value=\"Create the Class!\"> \n");
 		out.println("</form> \n");
 		
 		out.println("<h4>View Your Classes </h4>\n");
@@ -309,7 +328,6 @@ public class TeacherHomeServlet extends HttpServlet {
 	    
 		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + email  + "\"> \n");
 		out.println("<input type=\"hidden\" name=\"Password\" value=\"" + password  + "\"> \n");
-		out.println("<input type=\"hidden\" name=\"user\" value=\"" + user  + "\"> \n");
 		
 		out.println("<br><input type=\"submit\" value=\"Create the Assignment!\"> \n");
 

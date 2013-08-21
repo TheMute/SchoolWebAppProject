@@ -14,16 +14,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class DropClassServlet
+ * Servlet implementation class CreateSubjectServlet
  */
-@WebServlet("/DropClassServlet")
-public class DropClassServlet extends HttpServlet {
+@WebServlet("/CreateSubjectServlet")
+public class CreateSubjectServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public DropClassServlet() {
+    public CreateSubjectServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -32,7 +32,7 @@ public class DropClassServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request,response);
+		doPost(request, response);
 	}
 
 	/**
@@ -40,13 +40,7 @@ public class DropClassServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String className = request.getParameter("ClassName");
-		String studentIDstr = request.getParameter("StudentID");
-		String classIDstr = request.getParameter("ClassID");
-		
-		int studentID = Integer.parseInt( studentIDstr );
-		int classID = Integer.parseInt( classIDstr );
-
+		String subjectName = request.getParameter("SubjectName");
 		
 		
 		final String JDBC_DRIVER="com.mysql.jdbc.Driver";  
@@ -67,12 +61,11 @@ public class DropClassServlet extends HttpServlet {
 	         conn = DriverManager.getConnection(DB_URL,USER,PASS);
 
 
-		     stmt = conn.prepareStatement( "DELETE FROM StudentClassRel WHERE StudentID = ? AND ClassID = ?" );
-	         stmt.setInt(1, studentID);
-	         stmt.setInt(2, classID);
+		     stmt = conn.prepareStatement( "INSERT INTO SUBJECT VALUES(NULL, ? )" );
+	     
+	         stmt.setString(1, subjectName);
+	          
 	         stmt.executeUpdate();
-	         
-	         
 	         
 	    }catch(SQLException se){
 	         //Handle errors for JDBC
@@ -107,7 +100,7 @@ public class DropClassServlet extends HttpServlet {
 	    
 	    response.setContentType("text/html");  
 		PrintWriter out = response.getWriter();
-		String title = "Class Dropped!";
+		String title = "Subject Created!";
 		out.println( "<!DOCTYPE html> \n" +
 					 "<html> \n" + 
 					 "<head> \n" +
@@ -117,23 +110,23 @@ public class DropClassServlet extends HttpServlet {
 					 "<body> \n" );
 		
 		
-		out.println( "Class " + className + " dropped!" );
+		out.println( "Subject " + subjectName + " created!" );
 		out.println( "<br> \n" );
 		//out.println( "<a href=\"http://localhost:8080/SchoolProject/TeacherHomeServlet\">Return to Teacher Home Page</a> \n");
 		//out.println(" <A HREF=\"javascript:history.back()\">Go Back</A> \n ");
 		
 		
-		out.println("<form action=\"StudentHomeServlet\" method=\"post\" > \n");
+		out.println("<form action=\"TeacherHomeServlet\" method=\"post\" > \n");
 		
 		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
 		out.println("<input type=\"hidden\" name=\"Password\" value=\"" + request.getParameter("Password")  + "\"> \n");
-		out.println("<input type=\"hidden\" name=\"user\" value=\"" + request.getParameter("user")  + "\"> \n");
 		
-		out.println("<br><input type=\"submit\" value=\"Return to Student Home Page!\"> \n");
+		out.println("<br><input type=\"submit\" value=\"Return to Teacher Home Page!\"> \n");
 		out.println("</form> \n");
 		
 		out.println( "</body> \n" );
 		out.println( "</html>\n" );
+		
 	}
 
 }
