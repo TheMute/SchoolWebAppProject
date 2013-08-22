@@ -210,6 +210,8 @@ public class ViewCompleteAssignmentServlet extends HttpServlet {
 			out.println("<input type=\"hidden\" name=\"Answer5\" value=\"" + answer5s.get(i)  + "\"> \n");
 			out.println("<input type=\"hidden\" name=\"completed\" value=\"" + completed.get(i)  + "\"> \n");
 			
+			out.println("<input type=\"hidden\" name=\"DueDate\" value=\"" + dueDates.get(i).toString()  + "\"> \n");
+			
 			
 			
 			out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");

@@ -185,8 +185,20 @@ public class StudentHomeServlet extends HttpServlet {
 		out.println("<h1>Student Home Page </h1>\n");
 		out.println("<h2>Welcome " + firstName + " " + lastName + "!</h2>\n");
 		
-		out.println("<b>Enroll in a class</b> \n");
-		out.println("<br>Select a class from the dropdown to enroll in the class \n");
+		out.println("<h4>View Your Mailbox</h4> \n");
+		out.println("<form action=\"MailboxServlet\" method=\"post\" > \n");
+		out.println("<input type=\"hidden\" name=\"StudentID\" value=\"" + studentID  + "\"> \n");
+		out.println("<input type=\"hidden\" name=\"UserName\" value=\"" + firstName + " " + lastName  + "\"> \n");
+		
+		
+		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + email  + "\"> \n");
+		out.println("<input type=\"hidden\" name=\"Password\" value=\"" + password  + "\"> \n");
+		
+		out.println("<input type=\"submit\" value=\"View Your Mailbox!\"> \n");
+		out.println("</form> \n");
+		
+		out.println("<h4>Enroll in a class</h4> \n");
+		out.println("Select a class from the dropdown to enroll in the class \n");
 		out.println("<form action=\"EnrollClassServlet\" method=\"post\" > \n");
 
 		out.println("<td><font face=\"verdana\" size=\"2px\">Class Name:</font></td> \n");

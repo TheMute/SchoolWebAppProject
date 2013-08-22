@@ -3,6 +3,7 @@
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -76,6 +77,7 @@ public class ListStudentsGradedAssignmentServlet extends HttpServlet {
 	    Vector<String> answer3s = new Vector<String>();
 	    Vector<String> answer4s = new Vector<String>();
 	    Vector<String> answer5s = new Vector<String>();
+	    Vector<Date> completedDates = new Vector<Date>();
 	    
 	    try{
 	         // Register JDBC driver
@@ -114,6 +116,7 @@ public class ListStudentsGradedAssignmentServlet extends HttpServlet {
 			    	 answer3s.add( "" );
 			    	 answer4s.add( "" );
 			    	 answer5s.add( "" );
+			    	 completedDates.add(null);
 			     }
 			     else{
 			    	 completed.add( 1 );
@@ -123,6 +126,7 @@ public class ListStudentsGradedAssignmentServlet extends HttpServlet {
 			    	 answer3s.add( rs.getString("Answer3"));
 			    	 answer4s.add( rs.getString("Answer4"));
 			    	 answer5s.add( rs.getString("Answer5"));
+			    	 completedDates.add( rs.getDate("CompletedDate"));
 			     }
 	         }
 	         
@@ -179,12 +183,15 @@ public class ListStudentsGradedAssignmentServlet extends HttpServlet {
 		out.println("<br><table width=\"50%\" border=\"1\"> \n");
 		out.println("<tr> \n");
 		out.println("<td> Assignment Name </td> \n");
+		out.println("<td> Completed Date </td> \n");
+		
 		out.println("<td> View Your Score </td> \n");
 		
 		out.println("</tr> \n");
 		for( int i = 0; i < assignmentCount; i++){
 			out.println("<tr> \n");
 			out.println("<td> " + assignmentNames.get(i) + " </td> \n");
+			out.println("<td> " + completedDates.get(i) + " </td> \n");
 			
 			out.println("<td> \n");
 			

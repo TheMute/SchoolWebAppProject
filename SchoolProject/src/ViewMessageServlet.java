@@ -1,0 +1,86 @@
+
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class ViewMessageServlet
+ */
+@WebServlet("/ViewMessageServlet")
+public class ViewMessageServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public ViewMessageServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doPost( request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String date = request.getParameter("DateSent");
+		String nameTo = request.getParameter("NameTo");
+		String nameFrom = request.getParameter("NameFrom");
+		String messageName = request.getParameter("MessageName");
+		String message = request.getParameter("Message");
+		
+	    response.setContentType("text/html");  
+		PrintWriter out = response.getWriter();
+		String title = "View Message!";
+		out.println( "<!DOCTYPE html> \n" +
+					 "<html> \n" + 
+					 "<head> \n" +
+					 "<meta charset=\"ISO-8859-1\"> \n" +
+					 "<title>" + title + "</title> \n" +
+					 "</head> \n" +
+					 "<body> \n" );
+		
+		
+		out.println( "<h3> Your Message! </h3> \n" );
+		
+		out.println("<table> \n");
+		out.println("<tr><td>Date Sent: </td><td>" + date + "</td></tr> \n");
+		out.println("<tr><td>Sent To: </td><td>" + nameTo + "</td></tr> \n");
+		out.println("<tr><td>Sent From: </td><td>" + nameFrom + "</td></tr> \n");
+		out.println("<tr><td>Message Name: </td><td>" + messageName + "</td></tr> \n");
+		out.println("<tr><td>Message: </td><td>" + message + "</td></tr> \n");
+		out.println("</table> \n");
+
+		
+		out.println("<form action=\"MailboxServlet\" method=\"post\" > \n");
+		
+		out.println("<input type=\"hidden\" name=\"StudentID\" value=\"" + request.getParameter("StudentID")  + "\"> \n");
+		out.println("<input type=\"hidden\" name=\"TeacherID\" value=\"" + request.getParameter("TeacherID")  + "\"> \n");
+		
+		out.println("<br><input type=\"submit\" value=\"Return to Mailbox!\"> \n");
+		out.println("</form> \n");
+		
+		
+		out.println("<form action=\"TeacherHomeServlet\" method=\"post\" > \n");
+		
+		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
+		out.println("<input type=\"hidden\" name=\"Password\" value=\"" + request.getParameter("Password")  + "\"> \n");
+		
+		out.println("<br><input type=\"submit\" value=\"Return to Teacher Home Page!\"> \n");
+		out.println("</form> \n");	
+		
+	}
+
+}

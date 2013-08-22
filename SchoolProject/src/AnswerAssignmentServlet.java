@@ -50,6 +50,7 @@ public class AnswerAssignmentServlet extends HttpServlet {
 		String answer4 = request.getParameter("Answer4");
 		String answer5 = request.getParameter("Answer5");
 		String completed = request.getParameter("completed");
+		String dueDate = request.getParameter("DueDate");
 		
 		
 		int studentID = Integer.parseInt(studentIDstr);
@@ -68,7 +69,8 @@ public class AnswerAssignmentServlet extends HttpServlet {
 		
 		
 		out.println( "Here are the questions for the assignment \"" + assignmentName + "\"<br> \n" );
-		
+		out.println( "Due Date: " + dueDate + " <br> \n" );
+
 		
 		out.println("<form action=\"CreateCompletedAssignmentServlet\" method=\"post\" > \n");
 		out.println("<br><font face=\"verdana\" size=\"2px\">" + question1 + ":</font> \n");
