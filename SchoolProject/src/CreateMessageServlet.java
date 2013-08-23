@@ -136,12 +136,12 @@ public class CreateMessageServlet extends HttpServlet {
 		out.println("</form> \n");
 		
 		
-		out.println("<form action=\"TeacherHomeServlet\" method=\"post\" > \n");
+		out.println("<form action=\"StudentHomeServlet\" method=\"post\" > \n");
 		
 		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
 		out.println("<input type=\"hidden\" name=\"Password\" value=\"" + request.getParameter("Password")  + "\"> \n");
 		
-		out.println("<br><input type=\"submit\" value=\"Return to Teacher Home Page!\"> \n");
+		out.println("<br><input type=\"submit\" value=\"Return to Student Home Page!\"> \n");
 		out.println("</form> \n");
 		
 		out.println( "</body> \n" );

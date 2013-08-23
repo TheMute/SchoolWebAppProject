@@ -52,7 +52,7 @@ public class MailboxServlet extends HttpServlet {
 			userType = 0;
 		}
 		else if( request.getParameter("TeacherID") != null){
-			studentIDstr = request.getParameter("TeacherID");
+			teacherIDstr = request.getParameter("TeacherID");
 			teacherID = Integer.parseInt(teacherIDstr);
 			userType = 1;
 		}
@@ -148,7 +148,7 @@ public class MailboxServlet extends HttpServlet {
 					 "<body> \n" );
 		
 		
-		out.println( "<h3> Your Mailbox </h4> \n" );
+		out.println( "<h3>" + userName +"'s Mailbox! </h4> \n" );
 		
 		out.println("<form action=\"InboxServlet\" method=\"post\" > \n");
 		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
@@ -233,8 +233,25 @@ public class MailboxServlet extends HttpServlet {
 		
 	    out.println("<br><input type=\"submit\" value=\"Send Your Message!\"> \n");
 		out.println("</form> \n");
-
 		
+		if( userType == 0){
+			out.println("<br><form action=\"StudentHomeServlet\" method=\"post\" > \n");
+			
+			out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
+			out.println("<input type=\"hidden\" name=\"Password\" value=\"" + request.getParameter("Password")  + "\"> \n");
+			
+			out.println("<br><input type=\"submit\" value=\"Return to Student Home Page!\"> \n");
+			out.println("</form> \n");	
+		}
+		else if( userType == 1 ){
+			out.println("<br><form action=\"TeacherHomeServlet\" method=\"post\" > \n");
+			
+			out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
+			out.println("<input type=\"hidden\" name=\"Password\" value=\"" + request.getParameter("Password")  + "\"> \n");
+			
+			out.println("<br><input type=\"submit\" value=\"Return to Teacher Home Page!\"> \n");
+			out.println("</form> \n");	
+		}
 
 		out.println( "</body> \n" );
 		out.println( "</html>\n" );	

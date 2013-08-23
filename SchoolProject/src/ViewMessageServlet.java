@@ -35,11 +35,23 @@ public class ViewMessageServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("viewmessage");
+		System.out.println(request.getParameter("Email"));
+		System.out.println(request.getParameter("Password"));
+		
 		String date = request.getParameter("DateSent");
 		String nameTo = request.getParameter("NameTo");
 		String nameFrom = request.getParameter("NameFrom");
 		String messageName = request.getParameter("MessageName");
 		String message = request.getParameter("Message");
+
+		String sendUserType = request.getParameter("SendUserType");
+		String sendUserID = request.getParameter("SendUserID");
+		String receiveUserType = request.getParameter("ReceiveUserType");
+		String receiveUserID = request.getParameter("ReceiveUserID");
+		
+		String userTypeSTR = request.getParameter("UserType");
+		int userType = Integer.parseInt(userTypeSTR);
 		
 	    response.setContentType("text/html");  
 		PrintWriter out = response.getWriter();
@@ -62,6 +74,41 @@ public class ViewMessageServlet extends HttpServlet {
 		out.println("<tr><td>Message Name: </td><td>" + messageName + "</td></tr> \n");
 		out.println("<tr><td>Message: </td><td>" + message + "</td></tr> \n");
 		out.println("</table> \n");
+		
+		out.println("<h4> Reply to the Message! </h4> \n");
+		
+		out.println("<form action=\"CreateMessageServlet\" method=\"post\" > \n");
+		
+		out.println("<table> \n");
+		
+		out.println( "<tr><td><font face=\"verdana\" size=\"2px\">Send Message To: </font></td> \n" );
+		out.println( "<td><font face=\"verdana\" size=\"2px\">" + nameFrom + "</font></td></tr> \n" );
+
+	    out.println( "<tr><td><font face=\"verdana\" size=\"2px\">Message Name: </font></td> \n" );
+	    out.println( "<td><input type=\"text\" name=\"MessageName\" value=\"RE: " + messageName +  "\"></td></tr> \n" );
+	    
+
+		out.println("<input type=\"hidden\" name=\"ReceiverDropdown\" value=\"" + receiveUserType + " " + receiveUserID  + "\">< \n");
+	    
+		out.println("</table> \n");
+		
+		out.println( " <font face=\"verdana\" size=\"2px\">Message:</font> \n ");
+	    out.println( "<br><textarea name = \"Message\" rows=\"4\" cols=\"75\"></textarea> \n ");
+		
+		out.println("<input type=\"hidden\" name=\"SenderUserType\" value=\"" + sendUserType  + "\"> \n");
+		out.println("<input type=\"hidden\" name=\"SenderUserID\" value=\"" + sendUserID  + "\"> \n");
+
+	
+		
+		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
+		out.println("<input type=\"hidden\" name=\"Password\" value=\"" + request.getParameter("Password")  + "\"> \n");
+		
+		out.println("<input type=\"hidden\" name=\"StudentID\" value=\"" + request.getParameter("StudentID")  + "\"> \n");
+		out.println("<input type=\"hidden\" name=\"TeacherID\" value=\"" + request.getParameter("TeadcherID")  + "\"> \n");
+
+		
+	    out.println("<br><input type=\"submit\" value=\"Send Your Message!\"> \n");
+		out.println("</form> \n");
 
 		
 		out.println("<form action=\"MailboxServlet\" method=\"post\" > \n");
@@ -73,13 +120,27 @@ public class ViewMessageServlet extends HttpServlet {
 		out.println("</form> \n");
 		
 		
-		out.println("<form action=\"TeacherHomeServlet\" method=\"post\" > \n");
-		
-		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
-		out.println("<input type=\"hidden\" name=\"Password\" value=\"" + request.getParameter("Password")  + "\"> \n");
-		
-		out.println("<br><input type=\"submit\" value=\"Return to Teacher Home Page!\"> \n");
-		out.println("</form> \n");	
+		if( userType == 0){
+			out.println("<br><form action=\"StudentHomeServlet\" method=\"post\" > \n");
+			
+			out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
+			out.println("<input type=\"hidden\" name=\"Password\" value=\"" + request.getParameter("Password")  + "\"> \n");
+			
+			out.println("<br><input type=\"submit\" value=\"Return to Student Home Page!\"> \n");
+			out.println("</form> \n");	
+		}
+		else if( userType == 1 ){
+			out.println("<br><form action=\"TeacherHomeServlet\" method=\"post\" > \n");
+			
+			out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
+			out.println("<input type=\"hidden\" name=\"Password\" value=\"" + request.getParameter("Password")  + "\"> \n");
+			
+			out.println("<br><input type=\"submit\" value=\"Return to Teacher Home Page!\"> \n");
+			out.println("</form> \n");	
+		}
+
+		out.println( "</body> \n" );
+		out.println( "</html>\n" );	
 		
 	}
 

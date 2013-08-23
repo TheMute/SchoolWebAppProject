@@ -42,6 +42,10 @@ public class InboxServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("inbox");
+		System.out.println(request.getParameter("Email"));
+		System.out.println(request.getParameter("Password"));
+		
 		String userTypeSTR = request.getParameter("UserType");
 		String userIDSTR = request.getParameter("UserID");
 		String userName = request.getParameter("UserName");
@@ -54,7 +58,6 @@ public class InboxServlet extends HttpServlet {
 		Vector<String> messages = new Vector<String>();
 		Vector<Date> dates = new Vector<Date>();
 		Vector<String> names = new Vector<String>();
-		
 		
 		
 		// JDBC driver name and database URL
@@ -177,6 +180,12 @@ public class InboxServlet extends HttpServlet {
 			out.println("<input type=\"hidden\" name=\"MessageName\" value=\"" + messageNames.get(i)  + "\"> \n");
 			out.println("<input type=\"hidden\" name=\"Message\" value=\"" + messages.get(i)  + "\"> \n");
 			
+			out.println("<input type=\"hidden\" name=\"SendUserType\" value=\"" + userType  + "\"> \n");
+			out.println("<input type=\"hidden\" name=\"SendUserID\" value=\"" + userID  + "\"> \n");
+			out.println("<input type=\"hidden\" name=\"ReceiveUserType\" value=\"" + receiverUserTypes.get(i)  + "\"> \n");
+			out.println("<input type=\"hidden\" name=\"ReceiveUserID\" value=\"" + receiverUserIDs.get(i)  + "\"> \n");
+			
+			out.println("<input type=\"hidden\" name=\"UserType\" value=\"" + userType  + "\"> \n");
 
 			out.println("<input type=\"hidden\" name=\"StudentID\" value=\"" + request.getParameter("StudentID")  + "\"> \n");
 			out.println("<input type=\"hidden\" name=\"TeacherID\" value=\"" + request.getParameter("TeacherID")  + "\"> \n");
@@ -202,12 +211,28 @@ public class InboxServlet extends HttpServlet {
 		out.println("</form> \n");
 		
 		
-		out.println("<form action=\"TeacherHomeServlet\" method=\"post\" > \n");
+		if( userType == 0){
+			out.println("<br><form action=\"StudentHomeServlet\" method=\"post\" > \n");
+			
+			out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
+			out.println("<input type=\"hidden\" name=\"Password\" value=\"" + request.getParameter("Password")  + "\"> \n");
+			
+			out.println("<br><input type=\"submit\" value=\"Return to Student Home Page!\"> \n");
+			out.println("</form> \n");	
+		}
+		else if( userType == 1 ){
+			out.println("<br><form action=\"TeacherHomeServlet\" method=\"post\" > \n");
+			
+			out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
+			out.println("<input type=\"hidden\" name=\"Password\" value=\"" + request.getParameter("Password")  + "\"> \n");
+			
+			out.println("<br><input type=\"submit\" value=\"Return to Teacher Home Page!\"> \n");
+			out.println("</form> \n");	
+		}
+
+		out.println( "</body> \n" );
+		out.println( "</html>\n" );	
 		
-		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
-		out.println("<input type=\"hidden\" name=\"Password\" value=\"" + request.getParameter("Password")  + "\"> \n");
-		
-		out.println("<br><input type=\"submit\" value=\"Return to Teacher Home Page!\"> \n");
-		out.println("</form> \n");		}
+	}
 
 }

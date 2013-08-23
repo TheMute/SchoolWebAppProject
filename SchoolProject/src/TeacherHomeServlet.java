@@ -214,8 +214,20 @@ public class TeacherHomeServlet extends HttpServlet {
 		out.println("<h1>Teacher Home Page </h1>\n");
 		out.println("<h2>Welcome " + firstName + " " + lastName + "!</h2>\n");
 		
-		out.println("<b>Create a Subject </b>\n");
-		out.println("<br>Type a name to create a subject\n");
+		out.println("<h4>View Your Mailbox</h4> \n");
+		out.println("<form action=\"MailboxServlet\" method=\"post\" > \n");
+		out.println("<input type=\"hidden\" name=\"TeacherID\" value=\"" + teacherID  + "\"> \n");
+		out.println("<input type=\"hidden\" name=\"UserName\" value=\"" + firstName + " " + lastName  + "\"> \n");
+		
+		
+		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + email  + "\"> \n");
+		out.println("<input type=\"hidden\" name=\"Password\" value=\"" + password  + "\"> \n");
+		
+		out.println("<input type=\"submit\" value=\"View Your Mailbox!\"> \n");
+		out.println("</form> \n");
+		
+		out.println("<h4>Create a Subject </h4>\n");
+		out.println("Type a name to create a subject\n");
 		out.println("<form action=\"CreateSubjectServlet\" method=\"post\" > \n");
 
 		out.println("<table><tr><td><font face=\"verdana\" size=\"2px\">Subject Name:</font></td> \n");
