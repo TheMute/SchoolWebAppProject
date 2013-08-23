@@ -42,10 +42,14 @@ public class EnrollClassServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String studentIDstr = request.getParameter("StudentID");
 		String classIDstr = request.getParameter("ClassDropdown");
+		String fullName = request.getParameter("FullName");
 		String className = null;
+		
 		
 		int studentID = Integer.parseInt(studentIDstr);
 		int classID = Integer.parseInt(classIDstr);
+		int teacherID = 0;
+		
 		
 		//System.out.println("student and class ID: " + studentID + "  " + classID);
 		
@@ -77,6 +81,17 @@ public class EnrollClassServlet extends HttpServlet {
 	         ResultSet rs = stmt.executeQuery();
 	         rs.next();
 	         className = rs.getString("ClassName");
+	         teacherID = rs.getInt("TeacherID");
+	         
+	         stmt = conn.prepareStatement("INSERT INTO Message VALUES( NULL, ?, ?, ?, ?, ?, ?, CURDATE(), NOW() )");
+	         stmt.setString(1, "Welcome to " + className + "!");
+	         stmt.setInt(2, 1);
+	         stmt.setInt(3, teacherID);
+	         stmt.setInt(4, 0);
+	         stmt.setInt(5, studentID);
+	         stmt.setString(6, "Hi  " + fullName + " !\n You have enrolled in the class " + className + "!\n");
+	         stmt.executeUpdate();
+	         
 	         
 	    }catch(SQLException se){
 	         //Handle errors for JDBC

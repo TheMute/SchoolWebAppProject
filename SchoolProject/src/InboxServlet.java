@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Vector;
 
 import javax.servlet.ServletException;
@@ -42,10 +43,7 @@ public class InboxServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("inbox");
-		System.out.println(request.getParameter("Email"));
-		System.out.println(request.getParameter("Password"));
-		
+
 		String userTypeSTR = request.getParameter("UserType");
 		String userIDSTR = request.getParameter("UserID");
 		String userName = request.getParameter("UserName");
@@ -59,6 +57,7 @@ public class InboxServlet extends HttpServlet {
 		Vector<Date> dates = new Vector<Date>();
 		Vector<String> names = new Vector<String>();
 		
+		Vector<Timestamp> times = new Vector<Timestamp>();
 		
 		// JDBC driver name and database URL
 		final String JDBC_DRIVER="com.mysql.jdbc.Driver";  
@@ -77,7 +76,7 @@ public class InboxServlet extends HttpServlet {
 	         // Open a connection
 	         conn = DriverManager.getConnection(DB_URL,USER,PASS);
 	         
-	         stmt = conn.prepareStatement( "SELECT * FROM Message WHERE ReceiverUserType=? AND ReceiverUserID=?");
+	         stmt = conn.prepareStatement( "SELECT * FROM Message WHERE ReceiverUserType=? AND ReceiverUserID=? ORDER BY DateTimeCreated DESC");
 	         stmt.setInt(1, userType);
 	         stmt.setInt(2, userID);
 	         rs = stmt.executeQuery();
@@ -88,6 +87,7 @@ public class InboxServlet extends HttpServlet {
 	        	 messageNames.add( rs.getString("MessageName"));
 	        	 messages.add( rs.getString("Message"));
 	        	 dates.add( rs.getDate("DateCreated"));
+	        	 times.add( rs.getTimestamp("DateTimeCreated"));
 	        	 
 	         }
 	         
@@ -104,7 +104,7 @@ public class InboxServlet extends HttpServlet {
 	    	         
 	        	 }
 	        	 else if( i == 1){
-	    	         stmt = conn.prepareStatement( "SELECT * FROM Teacer WHERE TeacherID = ?");
+	    	         stmt = conn.prepareStatement( "SELECT * FROM Teacher WHERE TeacherID = ?");
 	    	         stmt.setInt(1, receiverUserIDs.get(j));
 	    	         rs = stmt.executeQuery();
 	    	         
@@ -155,7 +155,7 @@ public class InboxServlet extends HttpServlet {
 		
 		out.println( "<h3> Your Inbox! </h3> \n" );
 		
-		out.println("<table width=\"50%\" border=\"1\"> \n");
+		out.println("<table width=\"75%\" border=\"1\"> \n");
 		out.println("<tr> \n");
 		out.println("<td> Date Sent </td> \n");
 		out.println("<td> Sent From </td> \n");
@@ -167,18 +167,18 @@ public class InboxServlet extends HttpServlet {
 		for( String s : messages){
 			
 			out.println("<tr> \n");
-			out.println("<td> " + dates.get(i) + " </td> \n");
+			out.println("<td> " + times.get(i) + " </td> \n");
 			out.println("<td> " + names.get(i) + " </td> \n");
 			out.println("<td> " + messageNames.get(i) + " </td> \n");
 			out.println("<td> <form action=\"ViewMessageServlet\" method=\"post\" > \n");
 			
 			out.println("<input type=\"submit\" value=\"View Message!\"> \n");
 			
-			out.println("<input type=\"hidden\" name=\"DateSent\" value=\"" + dates.get(i)  + "\"> \n");
+			out.println("<input type=\"hidden\" name=\"DateSent\" value=\"" + times.get(i)  + "\"> \n");
 			out.println("<input type=\"hidden\" name=\"NameTo\" value=\"" + userName  + "\"> \n");
 			out.println("<input type=\"hidden\" name=\"NameFrom\" value=\"" + names.get(i)  + "\"> \n");
 			out.println("<input type=\"hidden\" name=\"MessageName\" value=\"" + messageNames.get(i)  + "\"> \n");
-			out.println("<input type=\"hidden\" name=\"Message\" value=\"" + messages.get(i)  + "\"> \n");
+			out.println("<input type=\"hidden\" name=\"Message\" value=\"" + s  + "\"> \n");
 			
 			out.println("<input type=\"hidden\" name=\"SendUserType\" value=\"" + userType  + "\"> \n");
 			out.println("<input type=\"hidden\" name=\"SendUserID\" value=\"" + userID  + "\"> \n");
@@ -191,7 +191,9 @@ public class InboxServlet extends HttpServlet {
 			out.println("<input type=\"hidden\" name=\"TeacherID\" value=\"" + request.getParameter("TeacherID")  + "\"> \n");
 			out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
 			out.println("<input type=\"hidden\" name=\"Password\" value=\"" + request.getParameter("Password")  + "\"> \n");
-			
+			out.println("<input type=\"hidden\" name=\"UserName\" value=\"" + userName  + "\"> \n");
+			out.println("<input type=\"hidden\" name=\"UserID\" value=\"" + request.getParameter("UserID")  + "\"> \n");
+
 			out.println("</form></td> \n");
 			
 			out.println("</tr> \n");
@@ -204,9 +206,18 @@ public class InboxServlet extends HttpServlet {
 		
 		out.println("<form action=\"MailboxServlet\" method=\"post\" > \n");
 		
-		out.println("<input type=\"hidden\" name=\"StudentID\" value=\"" + request.getParameter("StudentID")  + "\"> \n");
-		out.println("<input type=\"hidden\" name=\"TeacherID\" value=\"" + request.getParameter("TeacherID")  + "\"> \n");
+		if( userType == 0 ){
+			out.println("<input type=\"hidden\" name=\"StudentID\" value=\"" + request.getParameter("UserID")  + "\"> \n");
+		}
+		else{
+			out.println("<input type=\"hidden\" name=\"TeacherID\" value=\"" + request.getParameter("UserID")  + "\"> \n");
+
+		}
+		out.println("<input type=\"hidden\" name=\"UserName\" value=\"" + userName  + "\"> \n");
 		
+		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
+		out.println("<input type=\"hidden\" name=\"Password\" value=\"" + request.getParameter("Password")  + "\"> \n");
+
 		out.println("<br><input type=\"submit\" value=\"Return to Mailbox!\"> \n");
 		out.println("</form> \n");
 		

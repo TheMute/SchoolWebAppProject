@@ -71,6 +71,9 @@ public class CreateUserServlet extends HttpServlet {
 			teacher = request.getParameter("Teacher").toString();  //on or null
 		*/
 		
+        int studentID = 0;
+
+		
 		final String JDBC_DRIVER="com.mysql.jdbc.Driver";  
 		final String DB_URL="jdbc:mysql://localhost:3306/SchoolProject";
 
@@ -80,6 +83,7 @@ public class CreateUserServlet extends HttpServlet {
 		
 	    Connection conn = null;
 	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
 		
 	    try{
 	         // Register JDBC driver
@@ -90,30 +94,6 @@ public class CreateUserServlet extends HttpServlet {
 	         // Open a connection
 	         conn = DriverManager.getConnection(DB_URL,USER,PASS);
 
-	         // Execute SQL query
-	         //stmt = conn.createStatement();
-	         /*
-	         String sql;
-	         if( student.equals("on") ){
-	        	 
-	        	 sql = "INSERT INTO STUDENT VALUES(?, ?, ?, ?, ? )";
-	        	 
-	        	 
-	        	 sql = "INSERT INTO STUDENT VALUES( " + studentID++ + "," + 
-	        			 								"'" + firstName + "'," +
-	        			 								"'" + lastName + "'," +
-									        			 "'" + email + "'," +
-									        			 "'" + password + "' )";
-									        			 
-	         }
-	         else{
-	        	 sql = "INSERT INTO STUDENT VALUES( " + teacherID++ + "," + 
-														"'" + firstName + "'," +
-														"'" + lastName + "'," +
-														"'" + email + "'," +
-														"'" + password + "' )";
-	         }
-	         */
 	         
 	         if( student ){
 		         stmt = conn.prepareStatement( "INSERT INTO STUDENT (StudentID, FirstName, LastName, Email, Password) VALUES(NULL, ?, ?, ?, ? )" );
@@ -127,8 +107,9 @@ public class CreateUserServlet extends HttpServlet {
 	         stmt.setString(3, email);
 	         stmt.setString(4, password);
 	          
-
 	         stmt.executeUpdate();
+	         
+	      
 	         
 	    }catch(SQLException se){
 	         //Handle errors for JDBC

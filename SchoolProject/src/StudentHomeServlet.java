@@ -211,7 +211,8 @@ public class StudentHomeServlet extends HttpServlet {
 		out.println("</select> \n");
 		
 		out.println("<input type=\"hidden\" name=\"StudentID\" value=\"" + studentID  + "\"> \n");
-		
+		out.println("<input type=\"hidden\" name=\"FullName\" value=\"" + firstName + " " + lastName  + "\"> \n");
+
 		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + email  + "\"> \n");
 		out.println("<input type=\"hidden\" name=\"Password\" value=\"" + password  + "\"> \n");
 		

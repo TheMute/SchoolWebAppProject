@@ -78,6 +78,11 @@ public class CreateGradedAssignment extends HttpServlet {
 		
 		boolean graded = false;
 		
+		String assignmentName = null;
+		String className = null;
+		int teacherID = 0;
+		int studentID = 0;
+		
 		// JDBC driver name and database URL
 		final String JDBC_DRIVER="com.mysql.jdbc.Driver";  
 		final String DB_URL="jdbc:mysql://localhost:3306/SchoolProject";
@@ -125,6 +130,25 @@ public class CreateGradedAssignment extends HttpServlet {
 				stmt.setInt(6, checkOff5);
 			}
 
+			stmt.executeUpdate();
+			
+			stmt = conn.prepareStatement("SELECT * FROM CLASS A JOIN ASSIGNMENT B ON A.CLASSID=B.CLASSID JOIN COMPLETEDASSIGNMENT C ON B.ASSIGNMENTID=C.ASSIGNMENTID JOIN GRADEDASSIGNMENT D ON C.COMPLETEDASSIGNMENTID=D.COMPLETEDASSIGNMENTID WHERE D.COMPLETEDASSIGNMENTID=?");
+			stmt.setInt(1, completedAssignmentID);
+			rs = stmt.executeQuery();
+			while(rs.next()){
+				assignmentName = rs.getString("AssignmentName");
+				className = rs.getString("ClassName");
+				studentID = rs.getInt("StudentID");
+				teacherID = rs.getInt("TeacherID");
+			}
+			
+			stmt = conn.prepareStatement("INSERT INTO Message VALUES( NULL, ?, ?, ?, ?, ?, ?, CURDATE(), NOW() )");
+			stmt.setString(1, "Assignment '" + assignmentName + "' has been graded for the class " + className + "!");
+			stmt.setInt(2, 1);
+			stmt.setInt(3, teacherID);
+			stmt.setInt(4, 0);
+			stmt.setInt(5, studentID);
+			stmt.setString(6, "Hello student!\n Your your assignment '" + assignmentName + "' has been graded for the class " + className + "!\n");
 			stmt.executeUpdate();
 			
 

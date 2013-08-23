@@ -57,6 +57,7 @@ public class MailboxServlet extends HttpServlet {
 			userType = 1;
 		}
 		
+		
 		Vector<String> names = new Vector<String>();
 		Vector<Integer> userIDs = new Vector<Integer>();
 		Vector<Integer> userTypes = new Vector<Integer>();
@@ -229,6 +230,8 @@ public class MailboxServlet extends HttpServlet {
 		
 		out.println("<input type=\"hidden\" name=\"StudentID\" value=\"" + studentID  + "\"> \n");
 		out.println("<input type=\"hidden\" name=\"TeacherID\" value=\"" + teacherID  + "\"> \n");
+
+		out.println("<input type=\"hidden\" name=\"UserName\" value=\"" + userName  + "\"> \n");
 
 		
 	    out.println("<br><input type=\"submit\" value=\"Send Your Message!\"> \n");

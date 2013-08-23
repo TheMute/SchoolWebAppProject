@@ -314,17 +314,22 @@ public class TeacherHomeServlet extends HttpServlet {
 		
 		out.println("<h4>Create an Assignment </h4>\n");
 		out.println("<form action=\"CreateAssignmentServlet\" method=\"post\" > \n");
-		out.println("<td><font face=\"verdana\" size=\"2px\">Class Name:</font></td> \n");
-		out.println("<select name=\"ClassesDropdown\"> \n");
+		
+		out.println("<table> \n");
+		out.println("<tr><td><font face=\"verdana\" size=\"2px\">Class Name:</font></td> \n");
+		out.println("<td><select name=\"ClassesDropdown\"> \n");
 		int j = 0;
 		for( String s : classNames ){
-			out.println("<option value=\"" + classIDs.get(j) + "\">" + s + "</option> \n");
+			out.println("<option value=\"" + classIDs.get(j) + ":" + s + "\">" + s + "</option> \n");
 			j++;
 		}
-		out.println("</select> \n");
+		out.println("</select></td></tr> \n");
 		
-	    out.println( "<br><font face=\"verdana\" size=\"2px\">Assignment Name:</font> \n" );
-	    out.println( "<input type=\"text\" name=\"AssignmentName\"> \n" );
+	    out.println( "<tr><td><font face=\"verdana\" size=\"2px\">Assignment Name:</font></td> \n" );
+	    out.println( "<td><input type=\"text\" name=\"AssignmentName\"></td></tr> \n" );
+	    out.println( "<tr><td><font face=\"verdana\" size=\"2px\">Due Date (YYYY-MM-DD):</font></td> \n" );
+	    out.println( "<td><input type=\"text\" name=\"DueDate\"></td></tr> \n" );
+		out.println("</table> \n");
 
 		out.println( " <br><font face=\"verdana\" size=\"2px\">Question 1:</font> \n ");
 	    out.println( "<br><textarea name = \"Question1\" rows=\"4\" cols=\"75\"></textarea> \n ");
@@ -339,6 +344,9 @@ public class TeacherHomeServlet extends HttpServlet {
 	    
 		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + email  + "\"> \n");
 		out.println("<input type=\"hidden\" name=\"Password\" value=\"" + password  + "\"> \n");
+		
+		out.println("<input type=\"hidden\" name=\"TeacherID\" value=\"" + teacherID  + "\"> \n");
+
 		
 		out.println("<br><input type=\"submit\" value=\"Create the Assignment!\"> \n");
 

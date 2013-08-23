@@ -5,8 +5,10 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Vector;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -40,17 +42,27 @@ public class CreateAssignmentServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String classID = request.getParameter("ClassesDropdown");
+		String [] classesDropdown = request.getParameter("ClassesDropdown").split(":");
+		
+		
+		String classID = classesDropdown[0]; //request.getParameter("ClassesDropdown");
 		int classIDint = Integer.parseInt(classID);
+		String className = classesDropdown[1];
 		String assignmentName = request.getParameter("AssignmentName");
 		
-		System.out.println("classID: " + classID);
+		System.out.println("classesdropdown: " + classID + " " + className);
+		
+		String teacherIDstr = request.getParameter("TeacherID");
+		int teacherID = Integer.parseInt(teacherIDstr);
+		
 		
 		String question1 = request.getParameter("Question1");
 		String question2 = request.getParameter("Question2");
 		String question3 = request.getParameter("Question3");
 		String question4 = request.getParameter("Question4");
 		String question5 = request.getParameter("Question5");
+		
+		Vector<Integer> studentIDs = new Vector<Integer>();
 		
 		/*
 		System.out.println("Question1: " + question1);
@@ -70,6 +82,7 @@ public class CreateAssignmentServlet extends HttpServlet {
 		
 		Connection conn = null;
 	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
 	    
 	    try{
 	         // Register JDBC driver
@@ -77,7 +90,7 @@ public class CreateAssignmentServlet extends HttpServlet {
 	         // Open a connection
 	         conn = DriverManager.getConnection(DB_URL,USER,PASS);
 
-		     stmt = conn.prepareStatement( "INSERT INTO Assignment VALUES(NULL, ?, ?, ?, ?, ?, ?, ? )" );
+		     stmt = conn.prepareStatement( "INSERT INTO Assignment VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, CURDATE() )" );
 	         stmt.setString(1, assignmentName);
 	         stmt.setInt(2, classIDint);
 	         stmt.setString(3, question1);
@@ -87,6 +100,26 @@ public class CreateAssignmentServlet extends HttpServlet {
 	         stmt.setString(7, question5);
 	         
 	         stmt.executeUpdate();
+	         
+	         
+	         stmt = conn.prepareStatement( "SELECT * FROM STUDENTCLASSREL WHERE ClassID = ?");
+	         stmt.setInt(1, classIDint);
+	         rs = stmt.executeQuery();
+	         while(rs.next()){
+	        	 studentIDs.add( rs.getInt("StudentID"));
+	         }
+	         
+	         for( int i : studentIDs ){
+		         stmt = conn.prepareStatement("INSERT INTO Message VALUES( NULL, ?, ?, ?, ?, ?, ?, CURDATE(), NOW() )");
+		         stmt.setString(1, "Assignment created for " + className + "!");
+		         stmt.setInt(2, 1);
+		         stmt.setInt(3, teacherID);
+		         stmt.setInt(4, 0);
+		         stmt.setInt(5, i);
+		         stmt.setString(6, "Hello student!\n A new assignment called '" + assignmentName + "' has been created for the class " + className + "!\n");
+		         stmt.executeUpdate();
+	         }
+
 	         
 	    }catch(SQLException se){
 	         //Handle errors for JDBC

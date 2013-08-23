@@ -46,6 +46,9 @@ public class CreateCompletedAssignmentServlet extends HttpServlet {
 		int studentID = Integer.parseInt(studentIDstr);
 		int assignmentID = Integer.parseInt(assignmentIDstr);
 		
+		int teacherID = 0;
+		String className = null;
+		
 		String assignmentName = request.getParameter("AssignmentName");
 		String answer1 = request.getParameter("Answer1");
 		String answer2 = request.getParameter("Answer2");
@@ -64,6 +67,7 @@ public class CreateCompletedAssignmentServlet extends HttpServlet {
 		
 	    Connection conn = null;
 	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
 	    
 	    try{
 	         // Register JDBC driver
@@ -95,7 +99,23 @@ public class CreateCompletedAssignmentServlet extends HttpServlet {
 		         stmt.setInt(7, assignmentID);
 		         stmt.executeUpdate();
 	         }
-
+	         
+	         stmt = conn.prepareStatement("SELECT * FROM CLASS A JOIN Assignment B ON A.ClassID = B.ClassID WHERE B.AssignmentID=?");
+	         stmt.setInt(1, assignmentID);
+	         rs = stmt.executeQuery();
+	         while(rs.next()){
+	        	 teacherID = rs.getInt("TeacherID");
+	        	 className = rs.getString("ClassName");
+	         }
+	         
+	         stmt = conn.prepareStatement("INSERT INTO Message VALUES( NULL, ?, ?, ?, ?, ?, ?, CURDATE(), NOW() )");
+	         stmt.setString(1, "Assignment '" + assignmentName + "' completed for " + className + "!");
+	         stmt.setInt(2, 0);
+	         stmt.setInt(3, studentID);
+	         stmt.setInt(4, 1);
+	         stmt.setInt(5, teacherID);
+	         stmt.setString(6, "Hello teacher!\n Your student has completed the assignment '" + assignmentName + "' for the class " + className + "!\n");
+	         stmt.executeUpdate();
 	         
 	    
 	         

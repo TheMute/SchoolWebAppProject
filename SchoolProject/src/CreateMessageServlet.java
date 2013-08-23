@@ -73,7 +73,7 @@ public class CreateMessageServlet extends HttpServlet {
 	         // Open a connection
 	         conn = DriverManager.getConnection(DB_URL,USER,PASS);
 	         
-	         stmt = conn.prepareStatement("INSERT INTO Message VALUES( NULL, ?, ?, ?, ?, ?, ?, CURDATE() )");
+	         stmt = conn.prepareStatement("INSERT INTO Message VALUES( NULL, ?, ?, ?, ?, ?, ?, CURDATE(), NOW() )");
 	         
 	         stmt.setString(1, messageName);
 	         stmt.setInt(2, senderUserType);
@@ -131,7 +131,8 @@ public class CreateMessageServlet extends HttpServlet {
 		
 		out.println("<input type=\"hidden\" name=\"StudentID\" value=\"" + request.getParameter("StudentID")  + "\"> \n");
 		out.println("<input type=\"hidden\" name=\"TeacherID\" value=\"" + request.getParameter("TeacherID")  + "\"> \n");
-		
+		out.println("<input type=\"hidden\" name=\"UserName\" value=\"" + request.getParameter("UserName")  + "\"> \n");
+
 		out.println("<br><input type=\"submit\" value=\"Return to Mailbox!\"> \n");
 		out.println("</form> \n");
 		
