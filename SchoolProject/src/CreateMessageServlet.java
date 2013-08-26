@@ -48,6 +48,8 @@ public class CreateMessageServlet extends HttpServlet {
 		String receiverUserTypeSTR = receiver[0];
 		String receiverUserIDSTR = receiver[1];
 		
+		String userName = request.getParameter("UserName");
+
 		
 		String message = request.getParameter("Message");
 		
@@ -129,9 +131,17 @@ public class CreateMessageServlet extends HttpServlet {
 		
 		out.println("<form action=\"MailboxServlet\" method=\"post\" > \n");
 		
-		out.println("<input type=\"hidden\" name=\"StudentID\" value=\"" + request.getParameter("StudentID")  + "\"> \n");
-		out.println("<input type=\"hidden\" name=\"TeacherID\" value=\"" + request.getParameter("TeacherID")  + "\"> \n");
-		out.println("<input type=\"hidden\" name=\"UserName\" value=\"" + request.getParameter("UserName")  + "\"> \n");
+		if( senderUserType == 0 ){
+			out.println("<input type=\"hidden\" name=\"StudentID\" value=\"" + request.getParameter("SenderUserID")  + "\"> \n");
+		}
+		else{
+			out.println("<input type=\"hidden\" name=\"TeacherID\" value=\"" + request.getParameter("SenderUserID")  + "\"> \n");
+
+		}
+		out.println("<input type=\"hidden\" name=\"UserName\" value=\"" + userName  + "\"> \n");
+		
+		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
+		out.println("<input type=\"hidden\" name=\"Password\" value=\"" + request.getParameter("Password")  + "\"> \n");
 
 		out.println("<br><input type=\"submit\" value=\"Return to Mailbox!\"> \n");
 		out.println("</form> \n");

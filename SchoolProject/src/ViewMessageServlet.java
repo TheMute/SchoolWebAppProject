@@ -106,8 +106,14 @@ public class ViewMessageServlet extends HttpServlet {
 		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
 		out.println("<input type=\"hidden\" name=\"Password\" value=\"" + request.getParameter("Password")  + "\"> \n");
 		
-		out.println("<input type=\"hidden\" name=\"StudentID\" value=\"" + request.getParameter("StudentID")  + "\"> \n");
-		out.println("<input type=\"hidden\" name=\"TeacherID\" value=\"" + request.getParameter("TeadcherID")  + "\"> \n");
+		if( userType == 0 ){
+			out.println("<input type=\"hidden\" name=\"StudentID\" value=\"" + request.getParameter("UserID")  + "\"> \n");
+		}
+		else{
+			out.println("<input type=\"hidden\" name=\"TeacherID\" value=\"" + request.getParameter("UserID")  + "\"> \n");
+
+		}
+		out.println("<input type=\"hidden\" name=\"UserName\" value=\"" + request.getParameter("UserName")  + "\"> \n");
 
 		
 	    out.println("<br><input type=\"submit\" value=\"Send Your Message!\"> \n");

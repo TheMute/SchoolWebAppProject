@@ -63,6 +63,12 @@ Please enter your email and password to login!<br>
           <option>"Excellent"</option>  
           </select>  
 -->
+	<form action="WebCalendar" method="get">
+		<input type="submit" value="WebCalendar GET">
+	</form>
+	<form action="WebCalendar" method="post">
+		<input type="submit" value="WebCalendar POST">
+	</form>
 
 </body>
 </html>
