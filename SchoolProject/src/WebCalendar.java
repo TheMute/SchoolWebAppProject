@@ -53,8 +53,9 @@ public class WebCalendar extends HttpServlet {
 	  protected SimpleDateFormat dfDayOfMonth = new SimpleDateFormat("d");         // used for writing date numerals in the calendar
 
 	  
-	  static protected String userID;
-	  static protected String user;
+	  static String userID;
+	  static String user;
+	  static String code;
 	  
 	//*******************
 	//default entry point
@@ -73,14 +74,21 @@ public class WebCalendar extends HttpServlet {
     		
     		userID = request.getParameter("UserID");
     		user = request.getParameter("user");
+    		code = request.getParameter("code");
     		
     		System.out.println("IN DOGET()");
-    		System.out.println("userid: " + userID);
-    		System.out.println("user: " + request.getParameter("user"));
-
+    		//System.out.println("userid: " + userID);
+    		System.out.println("user static: " + this.user);
+    		System.out.println("user param: " + request.getParameter("user"));
+    		System.out.println("userid static: " + this.userID);
+    		System.out.println("userid param: " + request.getParameter("UserID"));
+    		
+    		
+    		
     	    response.setContentType("text/html");
     	    PrintWriter out = response.getWriter();
     	    thisServletURI = "/SchoolProject" + request.getServletPath();
+
 
     	    Calendar thisMonth = Calendar.getInstance();
     	    java.util.Date thisDate = new java.util.Date();
@@ -104,7 +112,7 @@ public class WebCalendar extends HttpServlet {
     	    
     	    if (request.getParameter("form") == null) {
     	      out.println(tableHeader(thisMonth));
-    	      out.println(tableCells(thisMonth));
+    	      out.println(tableCells(thisMonth, request.getParameter("user"), request.getParameter("UserID")));
     	      out.println(tableFooter(thisMonth));
     	    }
     	    else if (request.getParameter("form").equals("help")) {
@@ -115,7 +123,7 @@ public class WebCalendar extends HttpServlet {
     	    }    
     	    else if (allowEdit(request,response)) {  
     	      if (request.getParameter("form").equals("new")) {
-    	        out.println(newEventForm(request.getParameter("value")));
+    	        out.println(newEventForm(request.getParameter("value"), request.getParameter("user"),  request.getParameter("UserID")  ));
     	      }
     	      else if (request.getParameter("form").equals("revise")) {
     	        out.println(reviseEventForm(request.getParameter("value")));
@@ -136,8 +144,8 @@ public class WebCalendar extends HttpServlet {
     	     + "<meta name='Author' content='Chuck Wight'>"
     	     + "<title>WebCalendar</title>"
     	     + "<SCRIPT LANGUAGE=JavaScript>"
-    	     + "function PopupWindow(url,form,value)"
-    	     + "{window.open(url+'?form='+form+'&value='+value,'EventControlPanel','width=370,height=370,dependent,resizable');}"
+    	     + "function PopupWindow(url,form,value,user,UserID,code,SetCookie)"
+    	     + "{window.open(url+'?form='+form+'&value='+value+'&user='+user+'&UserID='+UserID+'&code='+code+'&SetCookie='+SetCookie,'EventControlPanel','width=370,height=370,dependent,resizable');}"
     	     + "</SCRIPT>"
     	     + "</head>";
     	  }
@@ -206,7 +214,7 @@ public class WebCalendar extends HttpServlet {
     	     + "  </TR>";
     	  }
     	  
-    	  String tableCells(Calendar thisMonth) {
+    	  String tableCells(Calendar thisMonth, String userArg, String userIDArg) {
       		System.out.println("IN TABLECELLS()");
 
     	    StringBuffer returnValue = new StringBuffer();
@@ -252,8 +260,9 @@ public class WebCalendar extends HttpServlet {
     	        if (thisMonth.get(Calendar.MONTH) != iThisMonth) returnValue.append(" BGCOLOR=" + cOutDayColor);  // dark background for out-of-month days
     	        else if (dfDateField.format(thisMonth.getTime()).equals(dfDateField.format(today.getTime()))) returnValue.append(" BGCOLOR=" + cTodaysColor); // grey background for today's date
     	        else returnValue.append(" BGCOLOR=" + cBGCellColor);  // default white background
-    	        returnValue.append("><A HREF=# onClick=javascript:PopupWindow('" + thisServletURI + "','new','" + dfDateField.format(thisMonth.getTime()) + "');><FONT COLOR=" + cDtFontColor + " SIZE=-1><B>" + dfDayOfMonth.format(thisMonth.getTime()) + "</B></FONT></A>");
-    	          
+    	        returnValue.append("><A HREF=# onClick=javascript:PopupWindow('" + thisServletURI + "','new','" + dfDateField.format(thisMonth.getTime()) + "','" + userArg + "','"+ userIDArg + "','" + secretPassPhrase + "','" + "true');><FONT COLOR=" + cDtFontColor + " SIZE=-1><B>" + dfDayOfMonth.format(thisMonth.getTime()) + "</B></FONT></A>");
+    	        //returnValue.append("><A HREF=# onClick=javascript:PopupWindow('" + thisServletURI + "','new','" + dfDateField.format(thisMonth.getTime()) + "', '99');><FONT COLOR=" + cDtFontColor + " SIZE=-1><B>" + dfDayOfMonth.format(thisMonth.getTime()) + "</B></FONT></A>");
+  
     	        returnValue.append(todaysEvents(rsEvents,dfMySQLDate.format(thisMonth.getTime()))); // write out the cell contents
     	          
     	        if (firstCell) {
@@ -334,9 +343,14 @@ public class WebCalendar extends HttpServlet {
     	  
     	  boolean allowEdit(HttpServletRequest request, HttpServletResponse response) {
       		System.out.println("IN ALLOWEDIT()");
-
+      		System.out.println("static: " + this.user + " " + this.userID);
+      		
+      		System.out.println(" user: " + request.getParameter("user"));
+      		System.out.println(" code: " + request.getParameter("code"));
+      		System.out.println(" SetCookie: " + request.getParameter("SetCookie"));
+      		
     	    HttpSession session = request.getSession(true);
-    	    String codePhrase = (String)session.getAttribute("code");
+    	    String codePhrase = code;//(String)session.getAttribute("code");
     	    String user;
     	    if (codePhrase != null)
     	      if (codePhrase.equals(String.valueOf(secretPassPhrase.hashCode())))
@@ -391,9 +405,11 @@ public class WebCalendar extends HttpServlet {
     	   + "</FORM>";
     	  }
     	  
-    	  String newEventForm(String date) {
+    	  String newEventForm(String date, String userArg, String userIDArg) {
       		System.out.println("IN NEWEVENTFORM()");
 
+      		System.out.println(userArg + " " + userIDArg);
+      		
     	    StringBuffer returnValue = new StringBuffer();
 
     	    // print blank popup form for entering a new event:
@@ -418,9 +434,11 @@ public class WebCalendar extends HttpServlet {
     	     + "  <FONT SIZE=-2>You may have to click the \"Refresh\" button on your browser to view the changes.</FONT>"    
     	     + "  </TD></TR>"    
     	     + "  </TABLE>"
-    	     + "<input type=\"hidden\" name=\"user\" value=\"" + userID  + "\">"
+    	     + "<input type=\"hidden\" name=\"user\" value=\"" + userArg  + "\">"
       	     + "<input type=\"hidden\" name=\"code\" value=\"" + secretPassPhrase  + "\">"
-      	     + "<input type=\"hidden\" name=\"UserID\" value=\"" + userID  + "\">"
+      	     + "<input type=\"hidden\" name=\"UserID\" value=\"" + userIDArg  + "\">"
+    	     + "<input type=\"hidden\" name=\"SetCookie\" value=\"" + "true"  + "\">"
+      	     
     	     + "</FORM>");
     	    
     	    return returnValue.toString();
@@ -511,10 +529,17 @@ public class WebCalendar extends HttpServlet {
     	  public void doPost(HttpServletRequest request,HttpServletResponse response)
     	    throws ServletException, IOException {
     		  System.out.println("IN POST()");
+    		  
+    		  System.out.println("userid: " + request.getParameter("UserID"));
+    		  System.out.println("user: " + request.getParameter("user"));
+    		  System.out.println("code: " + request.getParameter("code"));
+    		  System.out.println("SetCookie: " + request.getParameter("SetCookie"));
+    		  
+    		  
 
     	    if (viewOnly) return;  // this servlet is set to disallow changes
     	    HttpSession session = request.getSession(true);
-    	    String user = this.user;//(String)session.getAttribute("user");
+    	    String user = request.getParameter("user");//(String)session.getAttribute("user");
 
     	    response.setContentType("text/html");
     	    PrintWriter out = response.getWriter();
@@ -522,9 +547,9 @@ public class WebCalendar extends HttpServlet {
     	  
     	    out.println("<HTML><head><title>Control Panel</title>");
     	    out.println("<SCRIPT Language=JavaScript>");
-    	    out.println("function finish(how,date) {");
+    	    out.println("function finish(how,date,UserID,user,code,SetCookie) {");
     	    out.println("  if (how == 'OK') {");
-    	    out.println("    opener.document.location = '" + thisServletURI + "?date='+date;");
+    	    out.println("    opener.document.location = '" + thisServletURI + "?date='+date+'" + "&UserID='+UserID+'" + "&user='+user+'" + "&code='+code+'" + "&SetCookie='+SetCookie;" );
     	    out.println("    window.close();");
     	    out.println("  } else if (how == 'conflict') {");
     	    out.println("    alert('Warning: this event conflicts with another event.');");
@@ -628,7 +653,7 @@ public class WebCalendar extends HttpServlet {
     	          } while (rsConflict.next());
     	        }
     	        else  // no conflicts; normal termination
-    	          out.println("<body onLoad=finish('OK','" + request.getParameter("EventDate") + "');>");  
+    	          out.println("<body onLoad=finish('OK','" + request.getParameter("EventDate") + "','" + request.getParameter("UserID") + "','" + request.getParameter("user") + "','" + request.getParameter("code") + "','" + request.getParameter("SetCookie") + "');>");  
     	        
     	        rsConflict.close();
     	      }
