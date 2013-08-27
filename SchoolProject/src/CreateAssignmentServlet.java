@@ -49,6 +49,7 @@ public class CreateAssignmentServlet extends HttpServlet {
 		int classIDint = Integer.parseInt(classID);
 		String className = classesDropdown[1];
 		String assignmentName = request.getParameter("AssignmentName");
+		String dueDate = request.getParameter("DueDate");
 		
 		System.out.println("classesdropdown: " + classID + " " + className);
 		
@@ -90,7 +91,7 @@ public class CreateAssignmentServlet extends HttpServlet {
 	         // Open a connection
 	         conn = DriverManager.getConnection(DB_URL,USER,PASS);
 
-		     stmt = conn.prepareStatement( "INSERT INTO Assignment VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, CURDATE() )" );
+		     stmt = conn.prepareStatement( "INSERT INTO Assignment VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ? )" );
 	         stmt.setString(1, assignmentName);
 	         stmt.setInt(2, classIDint);
 	         stmt.setString(3, question1);
@@ -98,6 +99,7 @@ public class CreateAssignmentServlet extends HttpServlet {
 	         stmt.setString(5, question3);
 	         stmt.setString(6, question4);
 	         stmt.setString(7, question5);
+	         stmt.setString(8, dueDate);
 	         
 	         stmt.executeUpdate();
 	         
@@ -116,9 +118,34 @@ public class CreateAssignmentServlet extends HttpServlet {
 		         stmt.setInt(3, teacherID);
 		         stmt.setInt(4, 0);
 		         stmt.setInt(5, i);
-		         stmt.setString(6, "Hello student!\n A new assignment called '" + assignmentName + "' has been created for the class " + className + "!\n");
+		         stmt.setString(6, "Hello student!\n A new assignment called '" + assignmentName + "' has been created for the class " + className + "!\n  It is due on " + dueDate + "! \n");
 		         stmt.executeUpdate();
 	         }
+	         
+	         String description = "Assignment '" + assignmentName + "' due!";
+	         String notes = "Assignment '" + assignmentName + "' due for the class " + className + "!";
+	         stmt = conn.prepareStatement("INSERT INTO EVENTS VALUES(NULL, ?, ?, ?, ?, ?, ?)");
+	         stmt.setString(1, dueDate);
+	         stmt.setString(2, dueDate);
+	         
+	         stmt.setString(3, description);
+	         stmt.setString(4, notes);
+	         stmt.setString(5, "T"+teacherID);
+	         stmt.setInt(6, 1);
+	         stmt.executeUpdate();
+	         
+	         for( int i : studentIDs){
+	        	 stmt = conn.prepareStatement("INSERT INTO EVENTS VALUES(NULL, ?, ?, ?, ?, ?, ?)");
+		         stmt.setString(1, dueDate);
+		         stmt.setString(2, dueDate);
+		         
+		         stmt.setString(3, description);
+		         stmt.setString(4, notes);
+		         stmt.setString(5, "S"+i);
+		         stmt.setInt(6, 1);
+		         stmt.executeUpdate();
+	         }
+	         
 
 	         
 	    }catch(SQLException se){

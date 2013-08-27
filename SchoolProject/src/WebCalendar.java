@@ -51,12 +51,12 @@ public class WebCalendar extends HttpServlet {
 	  protected SimpleDateFormat dfMySQLDate = new SimpleDateFormat("yyyy-MM-dd"); // matches format used by MySQL database
 	  protected SimpleDateFormat dfMySQLTime = new SimpleDateFormat("HH:mm");       //format used by MySQL database
 	  protected SimpleDateFormat dfDayOfMonth = new SimpleDateFormat("d");         // used for writing date numerals in the calendar
-
+	  
 	  
 	  static String userID;
 	  static String user;
 	  static String code;
-	  
+	  	  
 	//*******************
 	//default entry point
 	//*******************
@@ -71,7 +71,7 @@ public class WebCalendar extends HttpServlet {
 
     public void doGet(HttpServletRequest request,HttpServletResponse response)
     	    throws ServletException, IOException {
-    		
+    	
     		userID = request.getParameter("UserID");
     		user = request.getParameter("user");
     		code = request.getParameter("code");
@@ -82,7 +82,8 @@ public class WebCalendar extends HttpServlet {
     		System.out.println("user param: " + request.getParameter("user"));
     		System.out.println("userid static: " + this.userID);
     		System.out.println("userid param: " + request.getParameter("UserID"));
-    		
+    		System.out.println("email: " + request.getParameter("Email"));
+    		System.out.println("password: " + request.getParameter("Password"));
     		
     		
     	    response.setContentType("text/html");
@@ -111,9 +112,9 @@ public class WebCalendar extends HttpServlet {
     	    out.println(htmlHeader());
     	    
     	    if (request.getParameter("form") == null) {
-    	      out.println(tableHeader(thisMonth));
-    	      out.println(tableCells(thisMonth, request.getParameter("user"), request.getParameter("UserID")));
-    	      out.println(tableFooter(thisMonth));
+    	      out.println(tableHeader(thisMonth, request.getParameter("user"), request.getParameter("UserID"), request.getParameter("Email"), request.getParameter("Password")));
+    	      out.println(tableCells(thisMonth, request.getParameter("user"), request.getParameter("UserID"), request.getParameter("Email"), request.getParameter("Password")));
+    	      out.println(tableFooter(thisMonth, request.getParameter("user"), request.getParameter("UserID"), request.getParameter("Email"), request.getParameter("Password")));
     	    }
     	    else if (request.getParameter("form").equals("help")) {
     	      out.println(instructions());
@@ -123,14 +124,33 @@ public class WebCalendar extends HttpServlet {
     	    }    
     	    else if (allowEdit(request,response)) {  
     	      if (request.getParameter("form").equals("new")) {
-    	        out.println(newEventForm(request.getParameter("value"), request.getParameter("user"),  request.getParameter("UserID")  ));
+    	        out.println(newEventForm(request.getParameter("value"), request.getParameter("user"),  request.getParameter("UserID"), request.getParameter("Email"), request.getParameter("Password")  ));
     	      }
     	      else if (request.getParameter("form").equals("revise")) {
-    	        out.println(reviseEventForm(request.getParameter("value")));
+    	        out.println(reviseEventForm(request.getParameter("value"), request.getParameter("user"),  request.getParameter("UserID"), request.getParameter("Email"), request.getParameter("Password") ));
     	      }
     	    }
     	    else out.println(promptForPassword(request));
     	    out.println(htmlFooter());
+    	    
+    		if( request.getParameter("user").charAt(0) == 'S'){
+    			out.println("<br><form action=\"StudentHomeServlet\" method=\"post\" > \n");
+    			
+    			out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
+    			out.println("<input type=\"hidden\" name=\"Password\" value=\"" + request.getParameter("Password")  + "\"> \n");
+    			
+    			out.println("<br><input type=\"submit\" value=\"Return to Student Home Page!\"> \n");
+    			out.println("</form> \n");	
+    		}
+    		else if( request.getParameter("user").charAt(0) == 'T'){
+    			out.println("<br><form action=\"TeacherHomeServlet\" method=\"post\" > \n");
+    			
+    			out.println("<input type=\"hidden\" name=\"Email\" value=\"" + request.getParameter("Email")  + "\"> \n");
+    			out.println("<input type=\"hidden\" name=\"Password\" value=\"" + request.getParameter("Password")  + "\"> \n");
+    			
+    			out.println("<br><input type=\"submit\" value=\"Return to Teacher Home Page!\"> \n");
+    			out.println("</form> \n");	
+    		}
     	    
     	    return;
     	  }
@@ -144,8 +164,8 @@ public class WebCalendar extends HttpServlet {
     	     + "<meta name='Author' content='Chuck Wight'>"
     	     + "<title>WebCalendar</title>"
     	     + "<SCRIPT LANGUAGE=JavaScript>"
-    	     + "function PopupWindow(url,form,value,user,UserID,code,SetCookie)"
-    	     + "{window.open(url+'?form='+form+'&value='+value+'&user='+user+'&UserID='+UserID+'&code='+code+'&SetCookie='+SetCookie,'EventControlPanel','width=370,height=370,dependent,resizable');}"
+    	     + "function PopupWindow(url,form,value,user,UserID,code,SetCookie,Email,Password)"
+    	     + "{window.open(url+'?form='+form+'&value='+value+'&user='+user+'&UserID='+UserID+'&code='+code+'&SetCookie='+SetCookie+'&Email='+Email+'&Password='+Password,'EventControlPanel','width=370,height=370,dependent,resizable');}"
     	     + "</SCRIPT>"
     	     + "</head>";
     	  }
@@ -185,7 +205,7 @@ public class WebCalendar extends HttpServlet {
     	   return rv.toString();
     	  }
     	  
-    	  String tableHeader(Calendar thisMonth) {
+    	  String tableHeader(Calendar thisMonth, String userArg, String userIDArg, String Email, String Password) {
       		System.out.println("IN TABLEHEADER()");
 
     	    Calendar nextMonth = (Calendar)thisMonth.clone(); nextMonth.add(Calendar.MONTH,+1);
@@ -196,9 +216,9 @@ public class WebCalendar extends HttpServlet {
     	     + "  <TD BGCOLOR=" + cTopBarColor + " ALIGN=CENTER COLSPAN=7>"
     	     + "    <TABLE WIDTH=100% BORDER=0 CELLSPACING=0 CELLPADDING=0>"
     	     + "    <TR ALIGN=CENTER>"
-    	     + "      <TD><A HREF=" + thisServletURI + "?date=" + dfDateField.format(lastMonth.getTime()) + "><FONT SIZE=-1 COLOR=" + cTFontsColor + "><&#151;&nbsp;" + dfMonthName.format(lastMonth.getTime()) + "</FONT></A></TD>"
+    	     + "      <TD><A HREF=" + thisServletURI + "?date=" + dfDateField.format(lastMonth.getTime()) + "&user=" + userArg + "&UserID=" + userIDArg + "&code=" + secretPassPhrase + "&SetCookie=" + "true" + "&Email=" + Email + "&Password=" + Password + "><FONT SIZE=-1 COLOR=" + cTFontsColor + "><&#151;&nbsp;" + dfMonthName.format(lastMonth.getTime()) + "</FONT></A></TD>"
     	     + "      <TD><FONT SIZE=+1 COLOR=" + cTFontsColor + "><B>" + titleBar + dfMonthYear.format(thisMonth.getTime()) + "</B></FONT></TD>"
-    	     + "      <TD><A HREF=" + thisServletURI + "?date=" + dfDateField.format(nextMonth.getTime()) + "><FONT SIZE=-1 COLOR=" + cTFontsColor + ">" + dfMonthName.format(nextMonth.getTime()) + "&nbsp;&#151;></FONT></A></TD>"
+    	     + "      <TD><A HREF=" + thisServletURI + "?date=" + dfDateField.format(nextMonth.getTime()) + "&user=" + userArg + "&UserID=" + userIDArg + "&code=" + secretPassPhrase + "&SetCookie=" + "true" + "&Email=" + Email + "&Password=" + Password + "><FONT SIZE=-1 COLOR=" + cTFontsColor + ">" + dfMonthName.format(nextMonth.getTime()) + "&nbsp;&#151;></FONT></A></TD>"
     	     + "    </TR>"
     	     + "    </TABLE>"
     	     + "  </TD>"
@@ -214,7 +234,7 @@ public class WebCalendar extends HttpServlet {
     	     + "  </TR>";
     	  }
     	  
-    	  String tableCells(Calendar thisMonth, String userArg, String userIDArg) {
+    	  String tableCells(Calendar thisMonth, String userArg, String userIDArg, String Email, String Password) {
       		System.out.println("IN TABLECELLS()");
 
     	    StringBuffer returnValue = new StringBuffer();
@@ -260,10 +280,10 @@ public class WebCalendar extends HttpServlet {
     	        if (thisMonth.get(Calendar.MONTH) != iThisMonth) returnValue.append(" BGCOLOR=" + cOutDayColor);  // dark background for out-of-month days
     	        else if (dfDateField.format(thisMonth.getTime()).equals(dfDateField.format(today.getTime()))) returnValue.append(" BGCOLOR=" + cTodaysColor); // grey background for today's date
     	        else returnValue.append(" BGCOLOR=" + cBGCellColor);  // default white background
-    	        returnValue.append("><A HREF=# onClick=javascript:PopupWindow('" + thisServletURI + "','new','" + dfDateField.format(thisMonth.getTime()) + "','" + userArg + "','"+ userIDArg + "','" + secretPassPhrase + "','" + "true');><FONT COLOR=" + cDtFontColor + " SIZE=-1><B>" + dfDayOfMonth.format(thisMonth.getTime()) + "</B></FONT></A>");
+    	        returnValue.append("><A HREF=# onClick=javascript:PopupWindow('" + thisServletURI + "','new','" + dfDateField.format(thisMonth.getTime()) + "','" + userArg + "','"+ userIDArg + "','" + secretPassPhrase + "','" + "true','"+Email+"','"+Password+"');><FONT COLOR=" + cDtFontColor + " SIZE=-1><B>" + dfDayOfMonth.format(thisMonth.getTime()) + "</B></FONT></A>");
     	        //returnValue.append("><A HREF=# onClick=javascript:PopupWindow('" + thisServletURI + "','new','" + dfDateField.format(thisMonth.getTime()) + "', '99');><FONT COLOR=" + cDtFontColor + " SIZE=-1><B>" + dfDayOfMonth.format(thisMonth.getTime()) + "</B></FONT></A>");
   
-    	        returnValue.append(todaysEvents(rsEvents,dfMySQLDate.format(thisMonth.getTime()))); // write out the cell contents
+    	        returnValue.append(todaysEvents(rsEvents,dfMySQLDate.format(thisMonth.getTime()), userArg, userIDArg, Email, Password )); // write out the cell contents
     	          
     	        if (firstCell) {
     	            returnValue.append("<CENTER><FORM><INPUT TYPE=BUTTON VALUE='Help' onClick=javascript:PopupWindow('" + thisServletURI + "','help','yes');></FORM></CENTER>");
@@ -283,7 +303,7 @@ public class WebCalendar extends HttpServlet {
     	    return returnValue.toString();
     	  }
     	  
-    	  String todaysEvents(ResultSet rsEvents, String today) {
+    	  String todaysEvents(ResultSet rsEvents, String today, String userArg, String userIDArg, String Email, String Password) {
       		//System.out.println("IN TODAYSEVENTS()");
 
     	    try {
@@ -297,8 +317,9 @@ public class WebCalendar extends HttpServlet {
     	        else if (dfTimeField.format(start).equals(time0000) && dfTimeField.format(end).equals(time2359)) timeSpan = "ALL DAY:";
     	        else timeSpan = dfTimeField.format(rsEvents.getTime("Sdate")) + "-" + dfTimeField.format(rsEvents.getTime("Edate"));
 
-    	        returnValue.append("<br><A HREF=# onClick=javascript:PopupWindow('" + thisServletURI + "','revise','" + rsEvents.getString("EventID") + "');><font color=#0000FF>" + timeSpan + "</font></a>&nbsp;");
-    	        
+    	        returnValue.append("<br><A HREF=# onClick=javascript:PopupWindow('" + thisServletURI + "','revise','" + rsEvents.getString("EventID") + "','" + userArg + "','"+ userIDArg + "','" + secretPassPhrase + "','" + "true','"+Email+"','"+Password+"');><font color=#0000FF>" + timeSpan + "</font></a>&nbsp;");
+    	        //returnValue.append("><A HREF=# onClick=javascript:PopupWindow('" + thisServletURI + "','new','" + dfDateField.format(thisMonth.getTime()) + "','" + userArg + "','"+ userIDArg + "','" + secretPassPhrase + "','" + "true','"+Email+"','"+Password+"');><FONT COLOR=" + cDtFontColor + " SIZE=-1><B>" + dfDayOfMonth.format(thisMonth.getTime()) + "</B></FONT></A>");
+
     	        if(rsEvents.getBoolean("Flagged")) returnValue.append("<FONT COLOR=#FF0000>"); // write Desription field in red if flagged
     	        returnValue.append(rsEvents.getString("Description"));
     	        if(rsEvents.getBoolean("Flagged")) returnValue.append("</FONT>"); // returns red font color to default
@@ -311,7 +332,7 @@ public class WebCalendar extends HttpServlet {
     	    }
     	  }
     	      
-    	  String tableFooter(Calendar thisMonth) {
+    	  String tableFooter(Calendar thisMonth, String userArg, String userIDArg, String Email, String Password) {
       		System.out.println("IN TABLEFOOTER()");
 
     	    Calendar nextMonth = (Calendar)thisMonth.clone(); nextMonth.add(Calendar.MONTH,+1);
@@ -321,9 +342,9 @@ public class WebCalendar extends HttpServlet {
     	     + "  <TD BGCOLOR=" + cTopBarColor + " ALIGN=CENTER COLSPAN=7>"
     	     + "    <TABLE WIDTH=100% BORDER=0 CELLSPACING=0 CELLPADDING=0>"
     	     + "    <TR ALIGN=CENTER>"
-    	     + "      <TD><A HREF=" + thisServletURI + "?date=" + dfDateField.format(lastMonth.getTime()) + "><FONT SIZE=-1 COLOR=" + cTFontsColor + "><&#151;&nbsp;" + dfMonthName.format(lastMonth.getTime()) + "</FONT></A></TD>"
-    	     + "      <TD><A HREF=" + thisServletURI + "><FONT SIZE=-1 COLOR=" + cTFontsColor + "><B>Go To Current Month</B></FONT></A></TD>"
-    	     + "      <TD><A HREF=" + thisServletURI + "?date=" + dfDateField.format(nextMonth.getTime()) + "><FONT SIZE=-1 COLOR=" + cTFontsColor + ">" + dfMonthName.format(nextMonth.getTime()) + "&nbsp;&#151;></FONT></A></TD>"
+    	     + "      <TD><A HREF=" + thisServletURI + "?date=" + dfDateField.format(lastMonth.getTime()) + "&user=" + userArg + "&UserID=" + userIDArg + "&code=" + secretPassPhrase + "&SetCookie=" + "true" + "&Email=" + Email + "&Password=" + Password + "><FONT SIZE=-1 COLOR=" + cTFontsColor + "><&#151;&nbsp;" + dfMonthName.format(lastMonth.getTime()) + "</FONT></A></TD>"
+    	     + "      <TD><A HREF=" + thisServletURI + "?user=" + userArg + "&UserID=" + userIDArg + "&code=" + secretPassPhrase + "&SetCookie=" + "true" + "&Email=" + Email + "&Password=" + Password + "><FONT SIZE=-1 COLOR=" + cTFontsColor + "><B>Go To Current Month</B></FONT></A></TD>"
+    	     + "      <TD><A HREF=" + thisServletURI + "?date=" + dfDateField.format(nextMonth.getTime()) + "&user=" + userArg + "&UserID=" + userIDArg + "&code=" + secretPassPhrase + "&SetCookie=" + "true" + "&Email=" + Email + "&Password=" + Password + "><FONT SIZE=-1 COLOR=" + cTFontsColor + ">" + dfMonthName.format(nextMonth.getTime()) + "&nbsp;&#151;></FONT></A></TD>"
     	     + "    </TR>"
     	     + "    </TABLE>"
     	     + "  </TD>"
@@ -405,7 +426,7 @@ public class WebCalendar extends HttpServlet {
     	   + "</FORM>";
     	  }
     	  
-    	  String newEventForm(String date, String userArg, String userIDArg) {
+    	  String newEventForm(String date, String userArg, String userIDArg, String Email, String Password) {
       		System.out.println("IN NEWEVENTFORM()");
 
       		System.out.println(userArg + " " + userIDArg);
@@ -437,14 +458,17 @@ public class WebCalendar extends HttpServlet {
     	     + "<input type=\"hidden\" name=\"user\" value=\"" + userArg  + "\">"
       	     + "<input type=\"hidden\" name=\"code\" value=\"" + secretPassPhrase  + "\">"
       	     + "<input type=\"hidden\" name=\"UserID\" value=\"" + userIDArg  + "\">"
-    	     + "<input type=\"hidden\" name=\"SetCookie\" value=\"" + "true"  + "\">"
+	  	     + "<input type=\"hidden\" name=\"SetCookie\" value=\"" + "true"  + "\">"
+	  	     + "<input type=\"hidden\" name=\"Email\" value=\"" + Email  + "\">"
+		     + "<input type=\"hidden\" name=\"Password\" value=\"" + Password  + "\">"
+	     
       	     
     	     + "</FORM>");
     	    
     	    return returnValue.toString();
     	  }
     	  
-    	  String reviseEventForm(String eventID) {
+    	  String reviseEventForm(String eventID, String userArg, String userIDArg, String Email, String Password) {
       		System.out.println("IN REVISEEVENTFORM()");
 
     	    String date = null;
@@ -511,7 +535,16 @@ public class WebCalendar extends HttpServlet {
     	     + "  <TABLE BORDER=0 CELLSPACING=0><TR>"
     	     + "    <TD><INPUT TYPE=SUBMIT VALUE='Modify'></TD>"
     	     + "    <TD><INPUT TYPE=SUBMIT VALUE='Save New' OnClick=UserRequest.value='New'></TD>"
-    	     + "    <TD><INPUT TYPE=SUBMIT VALUE='Delete' OnClick=UserRequest.value='Delete'></TD></FORM>"
+    	     + "    <TD><INPUT TYPE=SUBMIT VALUE='Delete' OnClick=UserRequest.value='Delete'></TD>"
+    	     
+    	     + "<input type=\"hidden\" name=\"user\" value=\"" + userArg  + "\">"
+      	     + "<input type=\"hidden\" name=\"code\" value=\"" + secretPassPhrase  + "\">"
+      	     + "<input type=\"hidden\" name=\"UserID\" value=\"" + userIDArg  + "\">"
+    	     + "<input type=\"hidden\" name=\"SetCookie\" value=\"" + "true"  + "\">"
+	  	     + "<input type=\"hidden\" name=\"Email\" value=\"" + Email  + "\">"
+		     + "<input type=\"hidden\" name=\"Password\" value=\"" + Password  + "\">"
+    	     
+    	     + "</FORM>"
     	     + "  </TABLE>"
     	     + "  </TD></TR><TR><TD COLSPAN=2>"    
     	     + "  <FONT SIZE=-2>You may have to click the \"Refresh\" button on your browser "
@@ -534,7 +567,8 @@ public class WebCalendar extends HttpServlet {
     		  System.out.println("user: " + request.getParameter("user"));
     		  System.out.println("code: " + request.getParameter("code"));
     		  System.out.println("SetCookie: " + request.getParameter("SetCookie"));
-    		  
+      		System.out.println("email: " + request.getParameter("Email"));
+      		System.out.println("password: " + request.getParameter("Password"));
     		  
 
     	    if (viewOnly) return;  // this servlet is set to disallow changes
@@ -547,17 +581,17 @@ public class WebCalendar extends HttpServlet {
     	  
     	    out.println("<HTML><head><title>Control Panel</title>");
     	    out.println("<SCRIPT Language=JavaScript>");
-    	    out.println("function finish(how,date,UserID,user,code,SetCookie) {");
+    	    out.println("function finish(how,date,UserID,user,code,SetCookie,Email,Password) {");
     	    out.println("  if (how == 'OK') {");
-    	    out.println("    opener.document.location = '" + thisServletURI + "?date='+date+'" + "&UserID='+UserID+'" + "&user='+user+'" + "&code='+code+'" + "&SetCookie='+SetCookie;" );
+    	    out.println("    opener.document.location = '" + thisServletURI + "?date='+date+'" + "&UserID='+UserID+'" + "&user='+user+'" + "&code='+code+'" + "&SetCookie='+SetCookie+'" + "&Email='+Email+'" + "&Password='+Password;" );
     	    out.println("    window.close();");
     	    out.println("  } else if (how == 'conflict') {");
     	    out.println("    alert('Warning: this event conflicts with another event.');");
-    	    out.println("    opener.document.location = '" + thisServletURI + "?date='+date;");
+    	    out.println("    opener.document.location = '" + thisServletURI + "?date='+date+'" + "&UserID='+UserID+'" + "&user='+user+'" + "&code='+code+'" + "&SetCookie='+SetCookie+'" + "&Email='+Email+'" + "&Password='+Password;" );
     	    out.println("    window.close();");
     	    out.println("  } else if (how == 'dbError') {");
     	    out.println("    alert('An unexpected database error was encountered.');");
-    	    out.println("    opener.document.location = '" + thisServletURI + "?date='+date;");
+    	    out.println("    opener.document.location = '" + thisServletURI + "?date='+date+'" + "&UserID='+UserID+'" + "&user='+user+'" + "&code='+code+'" + "&SetCookie='+SetCookie+'" + "&Email='+Email+'" + "&Password='+Password;" );
     	    out.println("    history.go(-1);");
     	    out.println("  } else if (how == 'bad') {");
     	    out.println("    alert('Warning: some data values were missing or formatted incorrectly. Please try again.');");
@@ -603,7 +637,7 @@ public class WebCalendar extends HttpServlet {
     	        }
     	      } 
     	      catch (Exception e) {
-    	        out.println("<body onLoad=finish('bad','" + request.getParameter("EventDate") + "');>");
+    	          out.println("<body onLoad=finish('bad','" + request.getParameter("EventDate") + "','" + request.getParameter("UserID") + "','" + request.getParameter("user") + "','" + request.getParameter("code") + "','" + request.getParameter("SetCookie") + "','" + request.getParameter("Email") + "','" + request.getParameter("Password") + "');>");  
     	        out.println("</body></html>");
     	        return;  
     	      }
@@ -647,31 +681,30 @@ public class WebCalendar extends HttpServlet {
     	          out.println("Caution: possible database error " + stmt.executeUpdate(sqlQuery));
     	        
     	        if (rsConflict.next() ) {// conflict exists
-    	          out.println("<body onLoad=finish('conflict','" + request.getParameter("EventDate") + "');>");
+      	          out.println("<body onLoad=finish('conflict','" + request.getParameter("EventDate") + "','" + request.getParameter("UserID") + "','" + request.getParameter("user") + "','" + request.getParameter("code") + "','" + request.getParameter("SetCookie") + "','" + request.getParameter("Email") + "','" + request.getParameter("Password") + "');>");  
     	          do {
     	            out.println(rsConflict.getString("Description") + "<br>");
     	          } while (rsConflict.next());
     	        }
     	        else  // no conflicts; normal termination
-    	          out.println("<body onLoad=finish('OK','" + request.getParameter("EventDate") + "','" + request.getParameter("UserID") + "','" + request.getParameter("user") + "','" + request.getParameter("code") + "','" + request.getParameter("SetCookie") + "');>");  
+      	          out.println("<body onLoad=finish('OK','" + request.getParameter("EventDate") + "','" + request.getParameter("UserID") + "','" + request.getParameter("user") + "','" + request.getParameter("code") + "','" + request.getParameter("SetCookie") + "','" + request.getParameter("Email") + "','" + request.getParameter("Password") + "');>");  
     	        
     	        rsConflict.close();
     	      }
     	      else {  // usrRequest.equals("Delete")
     	        if (stmt.executeUpdate(sqlQuery) != 1) 
     	          out.println("Caution: possible database error " + stmt.executeUpdate(sqlQuery));
-    	        out.println("<body onLoad=finish('OK','" + request.getParameter("EventDate") + "');>");
+  	          out.println("<body onLoad=finish('OK','" + request.getParameter("EventDate") + "','" + request.getParameter("UserID") + "','" + request.getParameter("user") + "','" + request.getParameter("code") + "','" + request.getParameter("SetCookie") + "','" + request.getParameter("Email") + "','" + request.getParameter("Password") + "');>");  
     	      }
     	      out.println("</body></html>");
     	      stmt.close();
     	      conn.close();
-    	      rsConflict.close();
     	      
     	    } 
     	    catch (Exception e) { // SqlExceptions caught here
     	    	e.printStackTrace();
     	    	System.out.println("EXCEPTION HERE: " + e.getMessage());
-    	      out.println("<body onLoad=finish('dbError','" + request.getParameter("EventDate") + "');>");
+  	          out.println("<body onLoad=finish('dbError','" + request.getParameter("EventDate") + "','" + request.getParameter("UserID") + "','" + request.getParameter("user") + "','" + request.getParameter("code") + "','" + request.getParameter("SetCookie") + "','" + request.getParameter("Email") + "','" + request.getParameter("Password") + "');>");  
     	      out.println(e.getMessage());
     	      out.println("</body></html>");  
     	    }

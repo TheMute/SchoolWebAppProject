@@ -187,10 +187,10 @@ public class StudentHomeServlet extends HttpServlet {
 		
 		out.println("<h4>View Your Calendar</h4> \n");
 		out.println("<form action=\"WebCalendar\" method=\"get\" > \n");
-		out.println("<input type=\"hidden\" name=\"UserID\" value=\"" + studentID  + "\"> \n");
+		out.println("<input type=\"hidden\" name=\"UserID\" value=\"S" + studentID  + "\"> \n");
 		out.println("<input type=\"hidden\" name=\"UserName\" value=\"" + firstName + " " + lastName  + "\"> \n");
 		
-		out.println("<input type=\"hidden\" name=\"user\" value=\"" + studentID  + "\"> \n");
+		out.println("<input type=\"hidden\" name=\"user\" value=\"S" + studentID  + "\"> \n");
 		out.println("<input type=\"hidden\" name=\"code\" value=\"" + "KilroyWasHere"  + "\"> \n");
 		out.println("<input type=\"hidden\" name=\"SetCookie\" value=\"" + "true"  + "\"> \n");
 		
