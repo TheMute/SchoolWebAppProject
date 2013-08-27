@@ -185,6 +185,21 @@ public class StudentHomeServlet extends HttpServlet {
 		out.println("<h1>Student Home Page </h1>\n");
 		out.println("<h2>Welcome " + firstName + " " + lastName + "!</h2>\n");
 		
+		out.println("<h4>View Your Calendar</h4> \n");
+		out.println("<form action=\"WebCalendar\" method=\"get\" > \n");
+		out.println("<input type=\"hidden\" name=\"UserID\" value=\"" + studentID  + "\"> \n");
+		out.println("<input type=\"hidden\" name=\"UserName\" value=\"" + firstName + " " + lastName  + "\"> \n");
+		
+		out.println("<input type=\"hidden\" name=\"user\" value=\"" + studentID  + "\"> \n");
+		out.println("<input type=\"hidden\" name=\"code\" value=\"" + "KilroyWasHere"  + "\"> \n");
+		out.println("<input type=\"hidden\" name=\"SetCookie\" value=\"" + "true"  + "\"> \n");
+		
+		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + email  + "\"> \n");
+		out.println("<input type=\"hidden\" name=\"Password\" value=\"" + password  + "\"> \n");
+		
+		out.println("<input type=\"submit\" value=\"View Your Calendar!\"> \n");
+		out.println("</form> \n");
+		
 		out.println("<h4>View Your Mailbox</h4> \n");
 		out.println("<form action=\"MailboxServlet\" method=\"post\" > \n");
 		out.println("<input type=\"hidden\" name=\"StudentID\" value=\"" + studentID  + "\"> \n");
