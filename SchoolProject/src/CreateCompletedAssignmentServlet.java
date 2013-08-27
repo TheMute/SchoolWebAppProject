@@ -48,6 +48,7 @@ public class CreateCompletedAssignmentServlet extends HttpServlet {
 		
 		int teacherID = 0;
 		String className = null;
+		String studentName = null;
 		
 		String assignmentName = request.getParameter("AssignmentName");
 		String answer1 = request.getParameter("Answer1");
@@ -117,6 +118,30 @@ public class CreateCompletedAssignmentServlet extends HttpServlet {
 	         stmt.setString(6, "Hello teacher!\n Your student has completed the assignment '" + assignmentName + "' for the class " + className + "!\n");
 	         stmt.executeUpdate();
 	         
+	         stmt = conn.prepareStatement("SELECT * FROM STUDENT WHERE StudentID=?");
+	         stmt.setInt(1, studentID);
+	         rs = stmt.executeQuery();
+	         while( rs.next()){
+	        	 studentName = rs.getString("FirstName") + " " + rs.getString("LastName");
+	         }
+	         
+	         String description = "Assignment '" + assignmentName + "' completed!";
+	         String notes = "Assignment '" + assignmentName + "' completed for the class " + className + "!";
+	         stmt = conn.prepareStatement("INSERT INTO EVENTS VALUES(NULL, NOW(), NOW(), ?, ?, ?, ?)");
+	         stmt.setString(1, description);
+	         stmt.setString(2, notes);
+	         stmt.setString(3, "S"+studentID);
+	         stmt.setInt(4, 1);
+	         stmt.executeUpdate();
+	         
+	         description = "Assignment '" + assignmentName + "' completed by " + studentName + "!";
+	         notes = "Assignment '" + assignmentName + "' completed for the class " + className + " by your student " + studentName + "!";
+	         stmt = conn.prepareStatement("INSERT INTO EVENTS VALUES(NULL, NOW(), NOW(), ?, ?, ?, ?)");
+	         stmt.setString(1, description);
+	         stmt.setString(2, notes);
+	         stmt.setString(3, "T"+teacherID);
+	         stmt.setInt(4, 1);
+	         stmt.executeUpdate();
 	    
 	         
 	    }catch(SQLException se){
