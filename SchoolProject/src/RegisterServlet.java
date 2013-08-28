@@ -61,25 +61,25 @@ public class RegisterServlet extends HttpServlet {
 	      out.println( "{ \n");
 	      
 	      out.println( " if( form.FirstName.value == \"\" ){ \n ");
-	      out.println( "alert(\"Error: First Name cannont be blank!\" ); \n");
+	      out.println( "alert(\"Error: First Name cannot be blank!\" ); \n");
 	      out.println( "form.FirstName.focus() \n" );
 	      out.println( "return false; \n");
 	      out.println( "} \n" );
 	      
 	      out.println( " if( form.LastName.value == \"\" ){ \n ");
-	      out.println( "alert(\"Error: Last Name cannont be blank!\" ); \n");
+	      out.println( "alert(\"Error: Last Name cannot be blank!\" ); \n");
 	      out.println( "form.LastName.focus() \n" );
 	      out.println( "return false; \n");
 	      out.println( "} \n" );
 	      
 	      out.println( " if( form.Email.value == \"\" ){ \n ");
-	      out.println( "alert(\"Error: Email cannont be blank!\" ); \n");
+	      out.println( "alert(\"Error: Email cannot be blank!\" ); \n");
 	      out.println( "form.Email.focus() \n" );
 	      out.println( "return false; \n");
 	      out.println( "} \n" );
 	      
 	      out.println( " if( form.Password.value == \"\" ){ \n ");
-	      out.println( "alert(\"Error: Password cannont be blank!\" ); \n");
+	      out.println( "alert(\"Error: Password cannot be blank!\" ); \n");
 	      out.println( "form.Password.focus() \n" );
 	      out.println( "return false; \n");
 	      out.println( "} \n" );

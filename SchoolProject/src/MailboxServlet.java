@@ -144,9 +144,35 @@ public class MailboxServlet extends HttpServlet {
 					 "<html> \n" + 
 					 "<head> \n" +
 					 "<meta charset=\"ISO-8859-1\"> \n" +
-					 "<title>" + title + "</title> \n" +
-					 "</head> \n" +
-					 "<body> \n" );
+					 "<title>" + title + "</title> \n" );
+
+	      out.println( "<script type = \"text/javascript\"> \n" );
+
+		
+	      out.println( "function checkFormCreateMessage(form) " );
+	      out.println( "{ \n");
+	      
+	      out.println( " if( form.MessageName.value == \"\" ){ \n ");
+	      out.println( "alert(\"Error: Message Name cannot be blank!\" ); \n");
+	      out.println( "form.MessageName.focus() \n" );
+	      out.println( "return false; \n");
+	      out.println( "} \n" );
+	      
+	      out.println( " if( form.Message.value == \"\" ){ \n ");
+	      out.println( "alert(\"Error: Message cannot be blank!\" ); \n");
+	      out.println( "form.Message.focus() \n" );
+	      out.println( "return false; \n");
+	      out.println( "} \n" );
+	      
+	      out.println( "return true; \n");
+	      out.println( "} \n" );
+	      
+	      
+		
+	      out.println("</script> \n");
+
+		out.println("</head> \n" +
+				 "<body> \n" );
 		
 		
 		out.println( "<h3>" + userName +"'s Mailbox! </h4> \n" );
@@ -190,7 +216,7 @@ public class MailboxServlet extends HttpServlet {
 		
 		out.println("<h4> Send a Message! </h4> \n");
 		
-		out.println("<form action=\"CreateMessageServlet\" method=\"post\" > \n");
+		out.println("<form action=\"CreateMessageServlet\" method=\"post\" onsubmit=\"return checkFormCreateMessage(this)\" > \n");
 		
 		out.println("<table> \n");
 		

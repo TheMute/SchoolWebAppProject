@@ -207,10 +207,94 @@ public class TeacherHomeServlet extends HttpServlet {
 					 "<html> \n" + 
 					 "<head> \n" +
 					 "<meta charset=\"ISO-8859-1\"> \n" +
-					 "<title>" + title + "</title> \n" +
-					 "</head> \n" +
-					 "<body> \n" );
+					 "<title>" + title + "</title> \n" );
+
 		
+	      out.println( "<script type = \"text/javascript\"> \n" );
+	      out.println( "function checkFormCreateSubject(form) " );
+	      out.println( "{ \n");
+	      
+	      out.println( " if( form.SubjectName.value == \"\" ){ \n ");
+	      out.println( "alert(\"Error: Subject Name cannot be blank!\" ); \n");
+	      out.println( "form.SubjectName.focus() \n" );
+	      out.println( "return false; \n");
+	      out.println( "} \n" );
+	      
+	      out.println( "return true; \n");
+	      out.println( "} \n" );
+		
+	      out.println( "function checkFormCreateClass(form) " );
+	      out.println( "{ \n");
+	      
+	      out.println( " if( form.ClassName.value == \"\" ){ \n ");
+	      out.println( "alert(\"Error: Class Name cannot be blank!\" ); \n");
+	      out.println( "form.ClassName.focus() \n" );
+	      out.println( "return false; \n");
+	      out.println( "} \n" );
+	      
+	      out.println( "return true; \n");
+	      out.println( "} \n" );
+	      
+	      out.println( "function checkFormCreateAssignment(form) " );
+	      out.println( "{ \n");
+	      
+	      out.println( " if( form.AssignmentName.value == \"\" ){ \n ");
+	      out.println( "alert(\"Error: Assignment Name cannot be blank!\" ); \n");
+	      out.println( "form.AssignmentName.focus() \n" );
+	      out.println( "return false; \n");
+	      out.println( "} \n" );
+	      
+	      out.println( " if( form.DueDate.value == \"\" ){ \n ");
+	      out.println( "alert(\"Error: Due Date cannot be blank!\" ); \n");
+	      out.println( "form.DueDate.focus() \n" );
+	      out.println( "return false; \n");
+	      out.println( "} \n" );
+	      	      
+	      out.println( " if( !form.DueDate.value.match(/^[0-9]{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])/) ){ \n ");
+	      out.println( "alert(\"Error: Due Date must be in the form YYYY-MM-DD!\" ); \n");
+	      out.println( "form.DueDate.focus() \n" );
+	      out.println( "return false; \n");
+	      out.println( "} \n" );
+	      
+	      
+	      out.println( " if( form.Question1.value == \"\" ){ \n ");
+	      out.println( "alert(\"Error: Question 1 cannot be blank!\" ); \n");
+	      out.println( "form.Question1.focus() \n" );
+	      out.println( "return false; \n");
+	      out.println( "} \n" );
+	      
+	      out.println( " if( form.Question2.value == \"\" ){ \n ");
+	      out.println( "alert(\"Error: Question 2 cannot be blank!\" ); \n");
+	      out.println( "form.Question2.focus() \n" );
+	      out.println( "return false; \n");
+	      out.println( "} \n" );
+	      
+	      out.println( " if( form.Question3.value == \"\" ){ \n ");
+	      out.println( "alert(\"Error: Question 3 cannot be blank!\" ); \n");
+	      out.println( "form.Question3.focus() \n" );
+	      out.println( "return false; \n");
+	      out.println( "} \n" );
+	      
+	      out.println( " if( form.Question4.value == \"\" ){ \n ");
+	      out.println( "alert(\"Error: Question 4 cannot be blank!\" ); \n");
+	      out.println( "form.Question4.focus() \n" );
+	      out.println( "return false; \n");
+	      out.println( "} \n" );
+	      
+	      out.println( " if( form.Question5.value == \"\" ){ \n ");
+	      out.println( "alert(\"Error: Question 5 cannot be blank!\" ); \n");
+	      out.println( "form.Question5.focus() \n" );
+	      out.println( "return false; \n");
+	      out.println( "} \n" );
+	      
+	      
+	      out.println( "return true; \n");
+	      out.println( "} \n" );
+	      
+	      out.println("</script> \n");
+		
+	      out.println("</head><body> \n");
+	      
 		out.println("<h1>Teacher Home Page </h1>\n");
 		out.println("<h2>Welcome " + firstName + " " + lastName + "!</h2>\n");
 		
@@ -243,13 +327,13 @@ public class TeacherHomeServlet extends HttpServlet {
 		
 		out.println("<h4>Create a Subject </h4>\n");
 		out.println("Type a name to create a subject\n");
-		out.println("<form action=\"CreateSubjectServlet\" method=\"post\" > \n");
+		out.println("<form action=\"CreateSubjectServlet\" method=\"post\" onsubmit=\"return checkFormCreateSubject(this)\" > \n");
 
 		out.println("<table><tr><td><font face=\"verdana\" size=\"2px\">Subject Name:</font></td> \n");
 		out.println("<td><input type=\"text\" name=\"SubjectName\" onkeyup=\"this.value = this.value.toUpperCase();\"   ></td></tr></table> \n");
 		
 		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + email  + "\"> \n");
-		out.println("<input type=\"hidden\" name=\"Paswword\" value=\"" + password  + "\"> \n");
+		out.println("<input type=\"hidden\" name=\"Password\" value=\"" + password  + "\"> \n");
 		
 		out.println("<input type=\"submit\" value=\"Create the Subject!\"> \n");
 		out.println("</form> \n");
@@ -257,7 +341,7 @@ public class TeacherHomeServlet extends HttpServlet {
 		out.println("<br><b>Create a Class </b>\n");
 		out.println("<br>Type a name and select a subject from the dropdown to create a class\n");
 		
-		out.println("<form action=\"CreateClassServlet\" method=\"post\" > \n");
+		out.println("<form action=\"CreateClassServlet\" method=\"post\" onsubmit=\"return checkFormCreateClass(this)\" > \n");
 		out.println("<table> \n");
 		out.println("<tr> \n");
 		out.println("<td><font face=\"verdana\" size=\"2px\">Class Name:</font></td> \n");
@@ -277,7 +361,7 @@ public class TeacherHomeServlet extends HttpServlet {
 		out.println("</select></td> \n");
 		out.println("<input type=\"hidden\" name=\"TeacherID\" value=\"" + teacherID  + "\"> \n");
 		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + email  + "\"> \n");
-		out.println("<input type=\"hidden\" name=\"Paswword\" value=\"" + password  + "\"> \n");
+		out.println("<input type=\"hidden\" name=\"Password\" value=\"" + password  + "\"> \n");
 		
 		out.println("</tr> \n");
 
@@ -328,7 +412,7 @@ public class TeacherHomeServlet extends HttpServlet {
 		out.println("</table> \n");
 		
 		out.println("<h4>Create an Assignment </h4>\n");
-		out.println("<form action=\"CreateAssignmentServlet\" method=\"post\" > \n");
+		out.println("<form action=\"CreateAssignmentServlet\" method=\"post\" onsubmit=\"return checkFormCreateAssignment(this)\" > \n");
 		
 		out.println("<table> \n");
 		out.println("<tr><td><font face=\"verdana\" size=\"2px\">Class Name:</font></td> \n");
