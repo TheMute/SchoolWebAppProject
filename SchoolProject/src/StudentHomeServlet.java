@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 /**
  * Servlet implementation class StudentHomeServlet
  */
@@ -23,7 +25,8 @@ public class StudentHomeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static String email;
 	private static String password;
-       
+	private static Logger logger = Logger.getLogger( StudentHomeServlet.class.getName() );
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -138,36 +141,32 @@ public class StudentHomeServlet extends HttpServlet {
 
 
 	    }catch(SQLException se){
-	    	//Handle errors for JDBC
-	    	  
-	    	System.out.println(" SQLException occurred! ");
-	    	  
-	    	se.printStackTrace();
+	         //Handle errors for JDBC
+	    	  System.out.println(" SQLException occurred! ");
+	    	  logger.error( "SQL Exception ocurred", se);
+	         se.printStackTrace();
 	    }catch(Exception e){
-	    	//Handle errors for Class.forName
-	    	  
-	    	System.out.println(" Exception occurred! ");
-	    	  
-	         
-	        e.printStackTrace();
+	         //Handle errors for Class.forName
+	    	  System.out.println(" Exception occurred! ");
+	    	  logger.error( "Exception ocurred", e);
+	         e.printStackTrace();
 	    }finally{
-	        //finally block used to close resources
-			try{
-				if(stmt!=null)
-					stmt.close();
-			}catch(SQLException se2){
-				  
-					System.out.println(" SQLException2 occurred! ");
-			
-			}// nothing we can do
-			 
-			try{
-				if(conn!=null)
-					conn.close();
-			}catch(SQLException se){
-				System.out.println(" SQLException4 occurred! ");
-				se.printStackTrace();
-			}//end finally try
+	         //finally block used to close resources
+			 try{
+			    if(stmt!=null)
+			       stmt.close();
+			 }catch(SQLException se2){
+				  System.out.println(" SQLException2 occurred! ");
+		    	  logger.error( "SQL Exception ocurred", se2);
+			 }// nothing we can do
+			 try{
+			    if(conn!=null)
+			    conn.close();
+			 }catch(SQLException se){
+				 System.out.println(" SQLException4 occurred! ");
+		    	 logger.error( "SQL Exception ocurred", se);
+				 se.printStackTrace();
+			 }//end finally try
 	    } //end try
 		
 		
@@ -210,6 +209,18 @@ public class StudentHomeServlet extends HttpServlet {
 		out.println("<input type=\"hidden\" name=\"Password\" value=\"" + password  + "\"> \n");
 		
 		out.println("<input type=\"submit\" value=\"View Your Mailbox!\"> \n");
+		out.println("</form> \n");
+		
+		out.println("<h4>View Your Report Card</h4> \n");
+		out.println("<form action=\"ReportCardServlet\" method=\"post\" > \n");
+		out.println("<input type=\"hidden\" name=\"StudentID\" value=\"" + studentID  + "\"> \n");
+		out.println("<input type=\"hidden\" name=\"UserName\" value=\"" + firstName + " " + lastName  + "\"> \n");
+		
+		
+		out.println("<input type=\"hidden\" name=\"Email\" value=\"" + email  + "\"> \n");
+		out.println("<input type=\"hidden\" name=\"Password\" value=\"" + password  + "\"> \n");
+		
+		out.println("<input type=\"submit\" value=\"View Your Report Card!\"> \n");
 		out.println("</form> \n");
 		
 		out.println("<h4>Enroll in a class</h4> \n");

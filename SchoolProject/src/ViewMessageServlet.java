@@ -9,13 +9,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 /**
  * Servlet implementation class ViewMessageServlet
  */
 @WebServlet("/ViewMessageServlet")
 public class ViewMessageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+	private static Logger logger = Logger.getLogger( ViewMessageServlet.class.getName() );
+
     /**
      * @see HttpServlet#HttpServlet()
      */

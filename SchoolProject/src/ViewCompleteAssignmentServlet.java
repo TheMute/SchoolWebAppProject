@@ -16,13 +16,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 /**
  * Servlet implementation class ViewCompleteAssignmentServlet
  */
 @WebServlet("/ViewCompleteAssignmentServlet")
 public class ViewCompleteAssignmentServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+	private static Logger logger = Logger.getLogger( ViewCompleteAssignmentServlet.class.getName() );
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -136,13 +139,12 @@ public class ViewCompleteAssignmentServlet extends HttpServlet {
 	    }catch(SQLException se){
 	         //Handle errors for JDBC
 	    	  System.out.println(" SQLException occurred! ");
+	    	  logger.error( "SQL Exception ocurred", se);
 	         se.printStackTrace();
 	    }catch(Exception e){
 	         //Handle errors for Class.forName
-	    	  
 	    	  System.out.println(" Exception occurred! ");
-	    	  
-	         
+	    	  logger.error( "Exception ocurred", e);
 	         e.printStackTrace();
 	    }finally{
 	         //finally block used to close resources
@@ -150,16 +152,15 @@ public class ViewCompleteAssignmentServlet extends HttpServlet {
 			    if(stmt!=null)
 			       stmt.close();
 			 }catch(SQLException se2){
-				  
 				  System.out.println(" SQLException2 occurred! ");
-			
+		    	  logger.error( "SQL Exception ocurred", se2);
 			 }// nothing we can do
-			 
 			 try{
 			    if(conn!=null)
 			    conn.close();
 			 }catch(SQLException se){
 				 System.out.println(" SQLException4 occurred! ");
+		    	 logger.error( "SQL Exception ocurred", se);
 				 se.printStackTrace();
 			 }//end finally try
 	    } //end try
@@ -238,6 +239,7 @@ public class ViewCompleteAssignmentServlet extends HttpServlet {
 		out.println("</form> \n");
 		
 		out.println( "</body> \n" );
-		out.println( "</html>\n" );	}
+		out.println( "</html>\n" );	
+	}
 
 }

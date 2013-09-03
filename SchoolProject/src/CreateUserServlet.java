@@ -17,6 +17,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.*;
+
+
+
 /**
  * Servlet implementation class CreateUser
  */
@@ -26,6 +30,9 @@ public class CreateUserServlet extends HttpServlet {
 	
 	private static int studentID = 0;
 	private static int teacherID = 0;
+	
+	private static Logger logger = Logger.getLogger( CreateUserServlet.class.getName() );
+
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -46,7 +53,8 @@ public class CreateUserServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		
+	
 		String firstName = request.getParameter("FirstName").toString();
 		String lastName = request.getParameter("LastName").toString();
 		String email = request.getParameter("Email").toString();
@@ -113,16 +121,13 @@ public class CreateUserServlet extends HttpServlet {
 	         
 	    }catch(SQLException se){
 	         //Handle errors for JDBC
-	    	  
 	    	  System.out.println(" SQLException occurred! ");
-	    	  
+	    	  logger.error( "SQL Exception ocurred", se);
 	         se.printStackTrace();
 	    }catch(Exception e){
 	         //Handle errors for Class.forName
-	    	  
 	    	  System.out.println(" Exception occurred! ");
-	    	  
-	         
+	    	  logger.error( "Exception ocurred", e);
 	         e.printStackTrace();
 	    }finally{
 	         //finally block used to close resources
@@ -130,16 +135,15 @@ public class CreateUserServlet extends HttpServlet {
 			    if(stmt!=null)
 			       stmt.close();
 			 }catch(SQLException se2){
-				  
 				  System.out.println(" SQLException2 occurred! ");
-			
+		    	  logger.error( "SQL Exception ocurred", se2);
 			 }// nothing we can do
-			 
 			 try{
 			    if(conn!=null)
 			    conn.close();
 			 }catch(SQLException se){
 				 System.out.println(" SQLException4 occurred! ");
+		    	 logger.error( "SQL Exception ocurred", se);
 				 se.printStackTrace();
 			 }//end finally try
 	    } //end try

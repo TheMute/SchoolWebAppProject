@@ -16,13 +16,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 /**
  * Servlet implementation class TeacherHomeServlet
  */
 @WebServlet("/TeacherHomeServlet")
 public class TeacherHomeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
+	private static Logger logger = Logger.getLogger( TeacherHomeServlet.class.getName() );
+
 	private static String email;
 	private static String password;
 	private static String user;
@@ -175,28 +178,32 @@ public class TeacherHomeServlet extends HttpServlet {
 	        
 	        
 	    }catch(SQLException se){
-	    	//Handle errors for JDBC
-	    	System.out.println(" SQLException occurred! ");
-	    	se.printStackTrace();
+	         //Handle errors for JDBC
+	    	  System.out.println(" SQLException occurred! ");
+	    	  logger.error( "SQL Exception ocurred", se);
+	         se.printStackTrace();
 	    }catch(Exception e){
-	    	//Handle errors for Class.forName
-	    	System.out.println(" Exception occurred! ");
-	        e.printStackTrace();
+	         //Handle errors for Class.forName
+	    	  System.out.println(" Exception occurred! ");
+	    	  logger.error( "Exception ocurred", e);
+	         e.printStackTrace();
 	    }finally{
-	        //finally block used to close resources
-			try{
-				if(stmt!=null)
-					stmt.close();
-			}catch(SQLException se2){
-					System.out.println(" SQLException2 occurred! ");
-			}// nothing we can do
-			try{
-				if(conn!=null)
-					conn.close();
-			}catch(SQLException se){
-				System.out.println(" SQLException4 occurred! ");
-				se.printStackTrace();
-			}//end finally try
+	         //finally block used to close resources
+			 try{
+			    if(stmt!=null)
+			       stmt.close();
+			 }catch(SQLException se2){
+				  System.out.println(" SQLException2 occurred! ");
+		    	  logger.error( "SQL Exception ocurred", se2);
+			 }// nothing we can do
+			 try{
+			    if(conn!=null)
+			    conn.close();
+			 }catch(SQLException se){
+				 System.out.println(" SQLException4 occurred! ");
+		    	 logger.error( "SQL Exception ocurred", se);
+				 se.printStackTrace();
+			 }//end finally try
 	    } //end try
 		
 		

@@ -1,9 +1,6 @@
 
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,17 +11,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 /**
- * Servlet implementation class HelloWorld
+ * Servlet implementation class AnnouncementBoardServlet
  */
-@WebServlet("/HelloWorld")
-public class HelloWorld extends HttpServlet {
+@WebServlet("/AnnouncementBoardServlet")
+public class AnnouncementBoardServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static Logger logger = Logger.getLogger( HelloWorld.class.getName() );
+	private static Logger logger = Logger.getLogger( AnnouncementBoardServlet.class.getName() );
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public HelloWorld() {
+    public AnnouncementBoardServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -33,35 +30,14 @@ public class HelloWorld extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost( request, response );
-		
+		// TODO Auto-generated method stub
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		response.setContentType("text/html");  
-		
-		PrintWriter out = response.getWriter();
-		
-		try  
-		{  
-			BufferedReader in = new BufferedReader(new FileReader("C:\\Users\\yc05cl1\\workspace\\SchoolProject\\WebContent\\helloworld.html"));  
-			String str;  
-			while ((str = in.readLine()) != null) {  
-				out.println(str);  
-			}  
-			in.close();  
-		}  
-		catch(Exception e)  
-		{  
-			logger.error("Exception occurred! ", e);
-			System.out.println( "cannot get reader: " + e );  
-		}  
-		
-		
+		// TODO Auto-generated method stub
 	}
 
 }

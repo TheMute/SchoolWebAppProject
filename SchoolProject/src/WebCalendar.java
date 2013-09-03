@@ -15,12 +15,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 /**
  * Servlet implementation class WebCalendar
  */
 @WebServlet("/WebCalendar")
 public class WebCalendar extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static Logger logger = Logger.getLogger( WebCalendar.class.getName() );
+
        
 	// these parameters may be changed to suit the owner/user:
 	  protected boolean viewOnly = false; // true to disallow changes (for public viewing only); false to allow users to add/modify/delete events
@@ -100,6 +104,8 @@ public class WebCalendar extends HttpServlet {
     	        thisDate = dfDateField.parse(request.getParameter("date"));
     	        thisMonth.setTime(thisDate);
     	      } catch (ParseException e) {
+    	    	 logger.error( "Parse Exception ocurred", e);
+ 				 e.printStackTrace();
     	        out.println("Unable to parse date parameter. Using date=" + dfDateField.format(thisMonth.getTime()) + "<br>");
     	      }
     	      
@@ -162,7 +168,7 @@ public class WebCalendar extends HttpServlet {
     	     + "<head>"
     	     + "<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'>"
     	     + "<meta name='Author' content='Chuck Wight'>"
-    	     + "<title>WebCalendar</title>"
+    	     + "<title>Your Calendar!</title>"
     	     + "<SCRIPT LANGUAGE=JavaScript>"
     	     + "function PopupWindow(url,form,value,user,UserID,code,SetCookie,Email,Password)"
     	     + "{window.open(url+'?form='+form+'&value='+value+'&user='+user+'&UserID='+UserID+'&code='+code+'&SetCookie='+SetCookie+'&Email='+Email+'&Password='+Password,'EventControlPanel','width=370,height=370,dependent,resizable');}"
@@ -269,6 +275,8 @@ public class WebCalendar extends HttpServlet {
     	      rsEvents = stmt.executeQuery(sqlQueryString);
     	      if (!rsEvents.next()) rsEvents = null;     // no events in the whole month's display
     	    } catch(Exception e) {
+    	    	logger.error( "Exception ocurred", e);
+				 e.printStackTrace();
     	      return e.getMessage();
     	    }
     	    
@@ -328,6 +336,8 @@ public class WebCalendar extends HttpServlet {
     	      return returnValue.append("</font>").toString();
     	    } 
     	    catch (SQLException e) {
+    	    	logger.error( "Exception ocurred", e);
+				 e.printStackTrace();
     	      return e.getMessage();
     	    }
     	  }
@@ -496,6 +506,8 @@ public class WebCalendar extends HttpServlet {
     	        user = rs.getString("User");
     	      }
     	    } catch (Exception e) {
+    	    	logger.error( "Exception ocurred", e);
+				 e.printStackTrace();
     	      return e.getMessage();
     	    }
     	    
@@ -637,6 +649,8 @@ public class WebCalendar extends HttpServlet {
     	        }
     	      } 
     	      catch (Exception e) {
+    	    	  logger.error( "Exception ocurred", e);
+  				 e.printStackTrace();
     	          out.println("<body onLoad=finish('bad','" + request.getParameter("EventDate") + "','" + request.getParameter("UserID") + "','" + request.getParameter("user") + "','" + request.getParameter("code") + "','" + request.getParameter("SetCookie") + "','" + request.getParameter("Email") + "','" + request.getParameter("Password") + "');>");  
     	        out.println("</body></html>");
     	        return;  
@@ -702,6 +716,7 @@ public class WebCalendar extends HttpServlet {
     	      
     	    } 
     	    catch (Exception e) { // SqlExceptions caught here
+    	    	logger.error( "Exception ocurred", e);
     	    	e.printStackTrace();
     	    	System.out.println("EXCEPTION HERE: " + e.getMessage());
   	          out.println("<body onLoad=finish('dbError','" + request.getParameter("EventDate") + "','" + request.getParameter("UserID") + "','" + request.getParameter("user") + "','" + request.getParameter("code") + "','" + request.getParameter("SetCookie") + "','" + request.getParameter("Email") + "','" + request.getParameter("Password") + "');>");  
