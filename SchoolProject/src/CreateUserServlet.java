@@ -124,11 +124,13 @@ public class CreateUserServlet extends HttpServlet {
 	    	  System.out.println(" SQLException occurred! ");
 	    	  logger.error( "SQL Exception ocurred", se);
 	         se.printStackTrace();
+	         response.sendRedirect("SQLExceptionPage.jsp");
 	    }catch(Exception e){
 	         //Handle errors for Class.forName
 	    	  System.out.println(" Exception occurred! ");
 	    	  logger.error( "Exception ocurred", e);
 	         e.printStackTrace();
+	         response.sendRedirect("SQLExceptionPage.jsp");
 	    }finally{
 	         //finally block used to close resources
 			 try{
@@ -137,6 +139,7 @@ public class CreateUserServlet extends HttpServlet {
 			 }catch(SQLException se2){
 				  System.out.println(" SQLException2 occurred! ");
 		    	  logger.error( "SQL Exception ocurred", se2);
+			      response.sendRedirect("SQLExceptionPage.jsp");
 			 }// nothing we can do
 			 try{
 			    if(conn!=null)
@@ -144,6 +147,7 @@ public class CreateUserServlet extends HttpServlet {
 			 }catch(SQLException se){
 				 System.out.println(" SQLException4 occurred! ");
 		    	 logger.error( "SQL Exception ocurred", se);
+		         response.sendRedirect("SQLExceptionPage.jsp");
 				 se.printStackTrace();
 			 }//end finally try
 	    } //end try
