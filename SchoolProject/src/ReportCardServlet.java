@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -63,6 +64,8 @@ public class ReportCardServlet extends HttpServlet {
 	    Connection conn = null;
 	    PreparedStatement stmt = null;
 	    ResultSet rs = null;
+		RequestDispatcher disp = null;
+		
 	    
 	    try{
 	         // Register JDBC driver
@@ -86,19 +89,22 @@ public class ReportCardServlet extends HttpServlet {
 		     }
 	     
 	         
-	   
-	         
-	         
 	    }catch(SQLException se){
 	         //Handle errors for JDBC
 	    	  System.out.println(" SQLException occurred! ");
 	    	  logger.error( "SQL Exception ocurred", se);
 	         se.printStackTrace();
+	         request.setAttribute("SQLException", se);
+	         disp = request.getRequestDispatcher("/SQLExceptionPageServlet"); 
+	         disp.forward(request, response);  
 	    }catch(Exception e){
 	         //Handle errors for Class.forName
-	    	  System.out.println(" Exception occurred! ");
+	    	  System.out.println("Exception occurred! ");
 	    	  logger.error( "Exception ocurred", e);
 	         e.printStackTrace();
+	         request.setAttribute("Exception", e);
+	         disp = request.getRequestDispatcher("/ExceptionPageServlet"); 
+	         disp.forward(request, response);  	    
 	    }finally{
 	         //finally block used to close resources
 			 try{
@@ -107,7 +113,10 @@ public class ReportCardServlet extends HttpServlet {
 			 }catch(SQLException se2){
 				  System.out.println(" SQLException2 occurred! ");
 		    	  logger.error( "SQL Exception ocurred", se2);
-			 }// nothing we can do
+		    	  se2.printStackTrace();
+		         request.setAttribute("SQLException", se2);
+		         disp = request.getRequestDispatcher("/SQLExceptionPageServlet"); 
+		         disp.forward(request, response);  			 }// nothing we can do
 			 try{
 			    if(conn!=null)
 			    conn.close();
@@ -115,6 +124,9 @@ public class ReportCardServlet extends HttpServlet {
 				 System.out.println(" SQLException4 occurred! ");
 		    	 logger.error( "SQL Exception ocurred", se);
 				 se.printStackTrace();
+		         request.setAttribute("SQLException", se);
+		         disp = request.getRequestDispatcher("/SQLExceptionPageServlet"); 
+		         disp.forward(request, response);  
 			 }//end finally try
 	    } //end try
 		/*

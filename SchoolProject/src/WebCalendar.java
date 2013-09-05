@@ -100,12 +100,16 @@ public class WebCalendar extends HttpServlet {
     	    
     	    // look for an input date request (default = today)
     	    if (request.getParameter("date") != null) {
+    	    	RequestDispatcher disp = null;
     	      try {
     	        thisDate = dfDateField.parse(request.getParameter("date"));
     	        thisMonth.setTime(thisDate);
     	      } catch (ParseException e) {
     	    	 logger.error( "Parse Exception ocurred", e);
  				 e.printStackTrace();
+ 				 request.setAttribute("Exception", e);
+ 				 disp = request.getRequestDispatcher("/ExceptionPageServlet"); 
+ 		         disp.forward(request, response);  
     	        out.println("Unable to parse date parameter. Using date=" + dfDateField.format(thisMonth.getTime()) + "<br>");
     	      }
     	      
@@ -119,7 +123,7 @@ public class WebCalendar extends HttpServlet {
     	    
     	    if (request.getParameter("form") == null) {
     	      out.println(tableHeader(thisMonth, request.getParameter("user"), request.getParameter("UserID"), request.getParameter("Email"), request.getParameter("Password")));
-    	      out.println(tableCells(thisMonth, request.getParameter("user"), request.getParameter("UserID"), request.getParameter("Email"), request.getParameter("Password")));
+    	      out.println(tableCells(thisMonth, request.getParameter("user"), request.getParameter("UserID"), request.getParameter("Email"), request.getParameter("Password"), request, response));
     	      out.println(tableFooter(thisMonth, request.getParameter("user"), request.getParameter("UserID"), request.getParameter("Email"), request.getParameter("Password")));
     	    }
     	    else if (request.getParameter("form").equals("help")) {
@@ -133,7 +137,7 @@ public class WebCalendar extends HttpServlet {
     	        out.println(newEventForm(request.getParameter("value"), request.getParameter("user"),  request.getParameter("UserID"), request.getParameter("Email"), request.getParameter("Password")  ));
     	      }
     	      else if (request.getParameter("form").equals("revise")) {
-    	        out.println(reviseEventForm(request.getParameter("value"), request.getParameter("user"),  request.getParameter("UserID"), request.getParameter("Email"), request.getParameter("Password") ));
+    	        out.println(reviseEventForm(request.getParameter("value"), request.getParameter("user"),  request.getParameter("UserID"), request.getParameter("Email"), request.getParameter("Password"), request, response ));
     	      }
     	    }
     	    else out.println(promptForPassword(request));
@@ -240,7 +244,7 @@ public class WebCalendar extends HttpServlet {
     	     + "  </TR>";
     	  }
     	  
-    	  String tableCells(Calendar thisMonth, String userArg, String userIDArg, String Email, String Password) {
+    	  String tableCells(Calendar thisMonth, String userArg, String userIDArg, String Email, String Password, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
       		System.out.println("IN TABLECELLS()");
 
     	    StringBuffer returnValue = new StringBuffer();
@@ -261,7 +265,8 @@ public class WebCalendar extends HttpServlet {
     	    String startDate = dfMySQLDate.format(thisMonth.getTime());
     	    String endDate = dfMySQLDate.format(endOfMonth.getTime());
     	    ResultSet rsEvents = null;
-    	    
+    		RequestDispatcher disp = null;
+
     	    try {
    	          Class.forName("com.mysql.jdbc.Driver");
     	      Connection conn = DriverManager.getConnection(eventsDatabase,mySQLUser,mySQLPass);
@@ -277,6 +282,9 @@ public class WebCalendar extends HttpServlet {
     	    } catch(Exception e) {
     	    	logger.error( "Exception ocurred", e);
 				 e.printStackTrace();
+				 request.setAttribute("Exception", e);
+				 disp = request.getRequestDispatcher("/ExceptionPageServlet"); 
+				 disp.forward(request, response);  
     	      return e.getMessage();
     	    }
     	    
@@ -291,7 +299,7 @@ public class WebCalendar extends HttpServlet {
     	        returnValue.append("><A HREF=# onClick=javascript:PopupWindow('" + thisServletURI + "','new','" + dfDateField.format(thisMonth.getTime()) + "','" + userArg + "','"+ userIDArg + "','" + secretPassPhrase + "','" + "true','"+Email+"','"+Password+"');><FONT COLOR=" + cDtFontColor + " SIZE=-1><B>" + dfDayOfMonth.format(thisMonth.getTime()) + "</B></FONT></A>");
     	        //returnValue.append("><A HREF=# onClick=javascript:PopupWindow('" + thisServletURI + "','new','" + dfDateField.format(thisMonth.getTime()) + "', '99');><FONT COLOR=" + cDtFontColor + " SIZE=-1><B>" + dfDayOfMonth.format(thisMonth.getTime()) + "</B></FONT></A>");
   
-    	        returnValue.append(todaysEvents(rsEvents,dfMySQLDate.format(thisMonth.getTime()), userArg, userIDArg, Email, Password )); // write out the cell contents
+    	        returnValue.append(todaysEvents(rsEvents,dfMySQLDate.format(thisMonth.getTime()), userArg, userIDArg, Email, Password, request, response )); // write out the cell contents
     	          
     	        if (firstCell) {
     	            returnValue.append("<CENTER><FORM><INPUT TYPE=BUTTON VALUE='Help' onClick=javascript:PopupWindow('" + thisServletURI + "','help','yes');></FORM></CENTER>");
@@ -311,9 +319,10 @@ public class WebCalendar extends HttpServlet {
     	    return returnValue.toString();
     	  }
     	  
-    	  String todaysEvents(ResultSet rsEvents, String today, String userArg, String userIDArg, String Email, String Password) {
+    	  String todaysEvents(ResultSet rsEvents, String today, String userArg, String userIDArg, String Email, String Password, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
       		//System.out.println("IN TODAYSEVENTS()");
-
+    		  
+    		RequestDispatcher disp = null;  
     	    try {
     	      if (rsEvents==null || rsEvents.isAfterLast()) return "";   // no more events this month or empty ResultSet
     	      StringBuffer returnValue = new StringBuffer("<font size=-2>");
@@ -338,6 +347,9 @@ public class WebCalendar extends HttpServlet {
     	    catch (SQLException e) {
     	    	logger.error( "Exception ocurred", e);
 				 e.printStackTrace();
+				 request.setAttribute("Exception", e);
+				 disp = request.getRequestDispatcher("/ExceptionPageServlet"); 
+				 disp.forward(request, response);  
     	      return e.getMessage();
     	    }
     	  }
@@ -478,7 +490,7 @@ public class WebCalendar extends HttpServlet {
     	    return returnValue.toString();
     	  }
     	  
-    	  String reviseEventForm(String eventID, String userArg, String userIDArg, String Email, String Password) {
+    	  String reviseEventForm(String eventID, String userArg, String userIDArg, String Email, String Password, HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
       		System.out.println("IN REVISEEVENTFORM()");
 
     	    String date = null;
@@ -488,6 +500,7 @@ public class WebCalendar extends HttpServlet {
     	    String notes = null;
     	    String user = null;
     	    boolean flagged = false;
+    	    RequestDispatcher disp = null;
     	    
     	    // retrieve the existing data for the selected event
     	    try {
@@ -508,6 +521,9 @@ public class WebCalendar extends HttpServlet {
     	    } catch (Exception e) {
     	    	logger.error( "Exception ocurred", e);
 				 e.printStackTrace();
+				 request.setAttribute("Exception", e);
+				 disp = request.getRequestDispatcher("/ExceptionPageServlet"); 
+				 disp.forward(request, response); 
     	      return e.getMessage();
     	    }
     	    
@@ -590,6 +606,8 @@ public class WebCalendar extends HttpServlet {
     	    response.setContentType("text/html");
     	    PrintWriter out = response.getWriter();
     	    thisServletURI = "/SchoolProject" + request.getServletPath();
+    	    
+    	    RequestDispatcher disp = null;
     	  
     	    out.println("<HTML><head><title>Control Panel</title>");
     	    out.println("<SCRIPT Language=JavaScript>");
@@ -625,6 +643,7 @@ public class WebCalendar extends HttpServlet {
     	      String description = removeSingleQuotes(request.getParameter("Description"));
     	      String notes = removeSingleQuotes(request.getParameter("Notes"));
     	      boolean flagged = Boolean.valueOf(request.getParameter("Flagged")).booleanValue();
+    			
     	      try {
     	        String eventType = request.getParameter("EventType");
     	        String date = dfMySQLDate.format(dfDateField.parse(request.getParameter("EventDate")));
@@ -651,6 +670,9 @@ public class WebCalendar extends HttpServlet {
     	      catch (Exception e) {
     	    	  logger.error( "Exception ocurred", e);
   				 e.printStackTrace();
+  				request.setAttribute("Exception", e);
+  				 disp = request.getRequestDispatcher("/ExceptionPageServlet"); 
+  				 disp.forward(request, response); 
     	          out.println("<body onLoad=finish('bad','" + request.getParameter("EventDate") + "','" + request.getParameter("UserID") + "','" + request.getParameter("user") + "','" + request.getParameter("code") + "','" + request.getParameter("SetCookie") + "','" + request.getParameter("Email") + "','" + request.getParameter("Password") + "');>");  
     	        out.println("</body></html>");
     	        return;  
@@ -718,6 +740,9 @@ public class WebCalendar extends HttpServlet {
     	    catch (Exception e) { // SqlExceptions caught here
     	    	logger.error( "Exception ocurred", e);
     	    	e.printStackTrace();
+    	    	request.setAttribute("Exception", e);
+    			 disp = request.getRequestDispatcher("/ExceptionPageServlet"); 
+    			 disp.forward(request, response);  
     	    	System.out.println("EXCEPTION HERE: " + e.getMessage());
   	          out.println("<body onLoad=finish('dbError','" + request.getParameter("EventDate") + "','" + request.getParameter("UserID") + "','" + request.getParameter("user") + "','" + request.getParameter("code") + "','" + request.getParameter("SetCookie") + "','" + request.getParameter("Email") + "','" + request.getParameter("Password") + "');>");  
     	      out.println(e.getMessage());
